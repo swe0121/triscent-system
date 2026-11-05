@@ -37,6 +37,7 @@ function managementShell(user, csrf, body) {
         ['Customers', '/owner/customers'],
         ['Reviews & Concerns', '/owner/feedback'],
         ['Reports', '/owner/reports'],
+        ['Database', '/owner/database'],
         ['Staff Accounts', '/owner/users']
       ]
     : [
@@ -63,9 +64,9 @@ function managementShell(user, csrf, body) {
 
 function portalLoginLayout({portal='owner', body='', flash=''}) {
   const owner = portal === 'owner';
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${owner?'Owner':'Staff'} Sign In | Triscent</title><meta name="description" content="Triscent management sign in"><link rel="stylesheet" href="/styles.css?v=6"></head><body class="store-body">
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${owner?'Owner':'Staff'} Sign In | Triscent</title><meta name="description" content="Triscent management sign in"><link rel="stylesheet" href="/styles.css?v=7"></head><body class="store-body">
     <main class="auth-page"><div class="auth-card"><span class="eyebrow">${owner?'OWNER PORTAL':'STAFF PORTAL'}</span><h1>Sign In</h1><p>${owner?'Manage products, stock, orders, customers, reports and staff accounts.':'Process orders, verify payments, confirm claims and handle customer concerns.'}</p>${flash?`<div class="flash portal-inline-flash">${esc(flash)}</div>`:''}${body}</div></main>
-    <script src="/app.js?v=6"></script>
+    <script src="/app.js?v=7"></script>
   </body></html>`;
 }
 
@@ -73,7 +74,7 @@ function layout({title='Triscent', body='', user=null, cartCount=0, csrf='', adm
   const content = admin
     ? managementShell(user, csrf, `${flash?`<div class="admin-flash">${esc(flash)}</div>`:''}${body}`)
     : `${customerHeader(user, cartCount, csrf)}${flash?`<div class="flash">${esc(flash)}</div>`:''}<main>${body}</main><footer class="site-footer"><div>${logo()}<p>Scented candles for everyday spaces and gift giving.</p></div><div><strong>Shop</strong><a href="/shop">All products</a><a href="/scent-finder">Scent Finder</a></div><div><strong>Account</strong><a href="/login">Sign in</a><a href="/account">My orders</a></div><div><strong>Triscent</strong><a href="/about">About</a></div></footer>`;
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)} | Triscent</title><meta name="description" content="Triscent scented candle ordering system"><link rel="stylesheet" href="/styles.css?v=6"></head><body class="${admin?'admin-body':'store-body'}">${content}<script src="/app.js?v=6"></script></body></html>`;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)} | Triscent</title><meta name="description" content="Triscent scented candle ordering system"><link rel="stylesheet" href="/styles.css?v=7"></head><body class="${admin?'admin-body':'store-body'}">${content}<script src="/app.js?v=7"></script></body></html>`;
 }
 
 function productCard(p, csrf='', user=null) {
