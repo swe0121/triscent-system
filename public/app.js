@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded',()=>{
   const path=location.pathname;
-  document.querySelectorAll('.management-nav a,.site-nav a').forEach(a=>{
+  document.querySelectorAll('.admin-nav a,.management-nav a,.site-nav a').forEach(a=>{
     const href=a.getAttribute('href');
     if(!href)return;
     const exact = href==='/' ? path==='/' : path===href || path.startsWith(href+'/');

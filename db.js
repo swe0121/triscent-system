@@ -142,22 +142,41 @@ function init() {
     ins.run('Triscent Staff','staff@triscent.local',hashPassword('Staff123!'),'09170000000','Triscent Main Store','staff');
   }
 
-  const productCount = db.prepare('SELECT COUNT(*) AS c FROM products').get().c;
+  let productCount = db.prepare('SELECT COUNT(*) AS c FROM products').get().c;
+  const placeholderCount = db.prepare("SELECT COUNT(*) AS c FROM products WHERE name IN ('Lavender Bliss','Vanilla Dream','Ocean Breeze','Rose Petal','Citrus Sunshine','Sandalwood Calm','Fresh Linen','Sweet Amber')").get().c;
+  const orderCount = db.prepare('SELECT COUNT(*) AS c FROM orders').get().c;
+  if (placeholderCount > 0 && orderCount === 0) {
+    db.exec('DELETE FROM wishlists; DELETE FROM products;');
+    productCount = 0;
+  }
   if (productCount === 0) {
     const catId = Object.fromEntries(db.prepare('SELECT id,slug FROM categories').all().map(x=>[x.slug,x.id]));
-    const products = [
-      ['Lavender Bliss','lavender-bliss','floral','A calming lavender candle made for quiet nights and relaxing spaces.','Lavender, Floral, Herbal','Relax','200g',250,18,'/assets/products/lavender.svg'],
-      ['Vanilla Dream','vanilla-dream','sweet','Warm vanilla with a soft creamy finish for a cozy and comforting mood.','Vanilla, Cream, Sweet','Cozy','200g',250,12,'/assets/products/vanilla.svg'],
-      ['Ocean Breeze','ocean-breeze','fresh','A clean ocean inspired scent with airy notes for a fresh room.','Marine, Fresh, Cotton','Fresh','200g',280,8,'/assets/products/ocean.svg'],
-      ['Rose Petal','rose-petal','floral','Soft rose petals with a light powdery finish for a romantic atmosphere.','Rose, Floral, Powder','Romantic','200g',260,5,'/assets/products/rose.svg'],
-      ['Citrus Sunshine','citrus-sunshine','fruity','Bright orange and lemon notes that make a room feel lively and clean.','Orange, Lemon, Citrus','Energy','200g',240,14,'/assets/products/citrus.svg'],
-      ['Sandalwood Calm','sandalwood-calm','woody','Smooth sandalwood with warm earthy notes for a grounded mood.','Sandalwood, Amber, Wood','Calm','200g',280,3,'/assets/products/sandalwood.svg'],
-      ['Fresh Linen','fresh-linen','fresh','Clean linen and soft soap notes for a just washed feeling.','Cotton, Linen, Clean','Fresh','100g',180,20,'/assets/products/linen.svg'],
-      ['Sweet Amber','sweet-amber','sweet','A rich amber scent with soft caramel warmth for evenings.','Amber, Caramel, Warm Spice','Cozy','200g',290,7,'/assets/products/amber.svg']
-    ];
+    const scentInfo = {
+      'Vanilla':['sweet','Vanilla','Cozy','/assets/products/default.svg'],
+      'Coffee':['sweet','Coffee','Energy','/assets/products/default.svg'],
+      'Lavender':['floral','Lavender','Relax','/assets/products/default.svg'],
+      'Strawberry':['fruity','Strawberry','Romantic','/assets/products/default.svg'],
+      'Warm Cotton':['fresh','Warm Cotton','Fresh','/assets/products/default.svg'],
+      'Pomegranate':['fruity','Pomegranate','Energy','/assets/products/default.svg'],
+      'Sea Breeze':['fresh','Sea Breeze','Fresh','/assets/products/default.svg'],
+      'Baby Powder':['fresh','Baby Powder','Calm','/assets/products/default.svg'],
+      'Cinnamon':['woody','Cinnamon','Cozy','/assets/products/default.svg']
+    };
+    const priceList = {
+      '100ML': {'Vanilla':230,'Coffee':230,'Lavender':240,'Strawberry':240,'Warm Cotton':260,'Pomegranate':250,'Sea Breeze':250,'Baby Powder':240,'Cinnamon':240},
+      '150ML': {'Vanilla':280,'Coffee':280,'Lavender':280,'Warm Cotton':320,'Pomegranate':310,'Sea Breeze':300,'Baby Powder':280,'Cinnamon':280},
+      '250ML': {'Vanilla':300,'Coffee':360,'Lavender':370,'Warm Cotton':440,'Pomegranate':430,'Sea Breeze':430,'Baby Powder':420,'Cinnamon':390},
+      '300ML': {'Vanilla':400,'Coffee':400,'Lavender':420,'Warm Cotton':520,'Pomegranate':500,'Sea Breeze':500,'Baby Powder':480,'Cinnamon':430}
+    };
     const ins = db.prepare(`INSERT INTO products(name,slug,category_id,description,scent_notes,mood,size,price,stock,image)
       VALUES (?,?,?,?,?,?,?,?,?,?)`);
-    for (const p of products) ins.run(p[0],p[1],catId[p[2]],p[3],p[4],p[5],p[6],p[7],p[8],p[9]);
+    for (const [size, scents] of Object.entries(priceList)) {
+      for (const [name, price] of Object.entries(scents)) {
+        const [cat, notes, mood, image] = scentInfo[name];
+        const slug = `${name.toLowerCase().replace(/[^a-z0-9]+/g,'-')}-${size.toLowerCase()}`;
+        ins.run(name,slug,catId[cat],`Triscent ${name} scented candle in ${size} size.`,notes,mood,size,price,15,image);
+      }
+    }
   }
 }
 
