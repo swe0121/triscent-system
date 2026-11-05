@@ -290,3 +290,5 @@ async function handle(req,res){
 }
 
 http.createServer((req,res)=>handle(req,res).catch(err=>{console.error(err);if(!res.headersSent)res.writeHead(500,{'Content-Type':'text/plain'});res.end('Server error')})).listen(PORT,()=>console.log(`Triscent running at http://localhost:${PORT}`));
+
+// railway autodeploy trigger v7
