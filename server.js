@@ -143,6 +143,38 @@ function staffAccountsPage(s){
   return `<section class="admin-page"><div class="admin-head"><div><span class="eyebrow">ACCESS MANAGEMENT</span><h1>Staff Accounts</h1><p>Create staff accounts and control who can access Triscent management tools.</p></div></div><div class="admin-grid"><section class="panel"><h2>Create Staff Account</h2><form method="post" action="/admin/users/create" class="stack-form"><input type="hidden" name="csrf" value="${s.row.csrf}"><label>Name<input name="name" required></label><label>Email<input type="email" name="email" required></label><label>Password<input type="password" name="password" minlength="8" required></label><label>Role<select name="role"><option value="staff">Staff</option><option value="owner">Owner</option></select></label><button class="btn primary">Create Account</button></form></section><section class="panel"><h2>Authorized Users</h2>${staff.map(u=>`<form method="post" action="/admin/users/update" class="staff-row"><input type="hidden" name="csrf" value="${s.row.csrf}"><input type="hidden" name="id" value="${u.id}"><div><strong>${esc(u.name)}</strong><small>${esc(u.email)}</small></div><select name="role"><option value="staff" ${u.role==='staff'?'selected':''}>Staff</option><option value="owner" ${u.role==='owner'?'selected':''}>Owner</option></select><select name="active"><option value="1" ${u.active?'selected':''}>Active</option><option value="0" ${!u.active?'selected':''}>Disabled</option></select><button>Save</button></form>`).join('')}</section></div></section>`;
 }
 
+function ownerDatabasePage(s,url){
+  const allowedTables=['users','categories','products','orders','order_items','reviews','concerns','wishlists'];
+  let table=(url.searchParams.get('table')||'orders').toLowerCase();
+  if(!allowedTables.includes(table))table='orders';
+
+  const columns=db.prepare(`PRAGMA table_info("${table}")`).all()
+    .map(col=>col.name)
+    .filter(name=>name!=='password_hash');
+  const rows=db.prepare(`SELECT * FROM "${table}" ORDER BY rowid DESC LIMIT 200`).all();
+
+  const label=table.replaceAll('_',' ').replace(/\b\w/g,m=>m.toUpperCase());
+  const tabs=allowedTables.map(name=>{
+    const title=name.replaceAll('_',' ').replace(/\b\w/g,m=>m.toUpperCase());
+    return `<a class="db-tab ${name===table?'active':''}" href="/owner/database?table=${encodeURIComponent(name)}">${esc(title)}</a>`;
+  }).join('');
+
+  const tableHtml=rows.length
+    ? `<div class="database-table-wrap"><table class="database-table"><thead><tr>${columns.map(col=>`<th>${esc(col.replaceAll('_',' '))}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${columns.map(col=>{
+        let value=row[col];
+        if(value===null||value===undefined||value==='')value='—';
+        if(typeof value==='string'&&value.length>120)value=value.slice(0,117)+'...';
+        return `<td>${esc(value)}</td>`;
+      }).join('')}</tr>`).join('')}</tbody></table></div>`
+    : '<div class="empty database-empty">No records in this table yet.</div>';
+
+  return `<section class="admin-page database-page">
+    <div class="admin-head"><div><span class="eyebrow">LIVE DATABASE</span><h1>Database Viewer</h1><p>View the records currently stored by the live Triscent system. This page is read-only.</p></div><span class="db-readonly">View only</span></div>
+    <div class="database-tabs">${tabs}</div>
+    <section class="panel database-panel"><div class="panel-title-row"><div><h2>${esc(label)}</h2><p class="database-count">${rows.length} record${rows.length===1?'':'s'} shown</p></div><span class="database-limit">Latest 200 records</span></div>${tableHtml}</section>
+  </section>`;
+}
+
 function loginPage(s,url,portal='customer'){
   const isCustomer=portal==='customer';
   const defaultNext=isCustomer?'/account':portal==='owner'?'/owner':'/staff';
@@ -195,6 +227,7 @@ async function handle(req,res){
     if(url.pathname==='/owner/customers'){if(!requireOwner(s,res))return;const users=db.prepare("SELECT id,name,email,contact,created_at FROM users WHERE role='customer' ORDER BY id DESC").all();return html(res,s,`<section class="admin-page"><div class="admin-head"><div><span class="eyebrow">CUSTOMERS</span><h1>Customer Directory</h1></div></div><section class="panel"><table><tr><th>Name</th><th>Email</th><th>Contact</th><th>Joined</th></tr>${users.map(u=>`<tr><td>${esc(u.name)}</td><td>${esc(u.email)}</td><td>${esc(u.contact)}</td><td>${esc(u.created_at.slice(0,10))}</td></tr>`).join('')}</table></section></section>`,'Customers',true)}
     if(url.pathname==='/owner/feedback'){if(!requireOwner(s,res))return;return html(res,s,feedbackPage(s),'Reviews & Concerns',true)}
     if(url.pathname==='/owner/reports'){if(!requireOwner(s,res))return;return ownerReports(res,s,url)}
+    if(url.pathname==='/owner/database'){if(!requireOwner(s,res))return;return html(res,s,ownerDatabasePage(s,url),'Database Viewer',true)}
     if(url.pathname==='/owner/users'){if(!requireOwner(s,res))return;return html(res,s,staffAccountsPage(s),'Staff Accounts',true)}
     return notFound(res);
   }
