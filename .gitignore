@@ -1,0 +1,16 @@
+# Runtime database files
+triscent.db
+triscent.db-shm
+triscent.db-wal
+
+# Environment / secrets
+.env
+.env.*
+
+# Node / editor / OS clutter
+node_modules/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+npm-debug.log*
