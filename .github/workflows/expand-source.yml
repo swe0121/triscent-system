@@ -1,0 +1,29 @@
+name: Expand Triscent source
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "bootstrap-source.tgz"
+
+permissions:
+  contents: write
+
+jobs:
+  expand:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Expand application source
+        run: tar -xzf bootstrap-source.tgz
+      - name: Commit expanded files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add server.js public/styles.css
+          if git diff --cached --quiet; then
+            echo "No source changes to commit."
+          else
+            git commit -m "Expand application source"
+            git push
+          fi
