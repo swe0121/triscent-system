@@ -37,6 +37,15 @@ function requireAdmin(s,res){if(!s.user||!['staff','owner'].includes(s.user.role
 function requireStaff(s,res){return requireAdmin(s,res)}
 function requireOwner(s,res){return requireAdmin(s,res)}
 function blockBackofficeStore(s,res){if(s.user&&['staff','owner'].includes(s.user.role)){redirect(res,portalHome(s));return true}return false}
+function enterCustomerSide(s){
+  if(s.user&&['staff','owner'].includes(s.user.role)){
+    db.prepare("UPDATE sessions SET user_id=NULL,cart_json='[]' WHERE id=?").run(s.row.id);
+    s.user=null;
+    s.cart=[];
+    s.row.user_id=null;
+    s.row.cart_json='[]';
+  }
+}
 function stockClass(p){return p.stock<=0?'Out of stock':p.stock<=p.low_stock_threshold?`${p.stock} left`:`${p.stock} available`}
 function cartDetails(cart){return cart.map(c=>{const p=db.prepare('SELECT p.*,c.name category_name FROM products p JOIN categories c ON c.id=p.category_id WHERE p.id=? AND p.active=1').get(c.product_id);return p?{...c,product:p,subtotal:p.price*c.qty}:null}).filter(Boolean)}
 function uniqueOrderNo(){return 'TRI'+new Date().toISOString().slice(2,10).replaceAll('-','')+Math.floor(1000+Math.random()*9000)}
@@ -202,6 +211,12 @@ async function handle(req,res){
     if(!file.startsWith(path.join(ROOT,'public'))||!fs.existsSync(file))return notFound(res); const ext=path.extname(file); const type=ext==='.css'?'text/css':ext==='.js'?'application/javascript':ext==='.svg'?'image/svg+xml':ext==='.jpg'||ext==='.jpeg'?'image/jpeg':ext==='.png'?'image/png':'application/octet-stream';res.writeHead(200,{'Content-Type':type,'Cache-Control':'no-store'});return fs.createReadStream(file).pipe(res);
   }
   if(req.method==='GET'){
+    // Dedicated Customer-side entry points. If an Owner/Staff session is active,
+    // switch out of management first instead of redirecting back to the portal.
+    if(url.pathname==='/customer'){enterCustomerSide(s);return redirect(res,'/')}
+    if(url.pathname==='/customer/login'){enterCustomerSide(s);return redirect(res,'/login')}
+    if(url.pathname==='/login' && s.user&&['staff','owner'].includes(s.user.role))enterCustomerSide(s);
+
     const storeRoute=['/','/shop','/product','/cart','/checkout','/login','/register','/account','/profile','/order','/compare','/scent-finder','/price-list','/about'].includes(url.pathname);
     if(storeRoute && blockBackofficeStore(s,res))return;
 
@@ -299,4 +314,4 @@ async function handle(req,res){
 
 http.createServer((req,res)=>handle(req,res).catch(err=>{console.error(err);if(!res.headersSent)res.writeHead(500,{'Content-Type':'text/plain'});res.end('Server error')})).listen(PORT,()=>console.log(`Triscent running at http://localhost:${PORT}`));
 
-// unified customer + owner-staff system v10
+// unified customer + owner-staff system v11
