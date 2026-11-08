@@ -213,8 +213,9 @@ async function handle(req,res){
   if(req.method==='GET'){
     // Dedicated Customer-side entry points. If an Owner/Staff session is active,
     // switch out of management first instead of redirecting back to the portal.
-    if(url.pathname==='/customer'){enterCustomerSide(s);return redirect(res,'/')}
+    if(url.pathname==='/customer'){enterCustomerSide(s);return redirect(res,'/customer/login')}
     if(url.pathname==='/customer/login'){enterCustomerSide(s);return redirect(res,'/login')}
+    if(url.pathname==='/customer/register'){enterCustomerSide(s);return redirect(res,'/register')}
     if(url.pathname==='/login' && s.user&&['staff','owner'].includes(s.user.role))enterCustomerSide(s);
 
     const storeRoute=['/','/shop','/product','/cart','/checkout','/login','/register','/account','/profile','/order','/compare','/scent-finder','/price-list','/about'].includes(url.pathname);
@@ -315,4 +316,4 @@ async function handle(req,res){
 
 http.createServer((req,res)=>handle(req,res).catch(err=>{console.error(err);if(!res.headersSent)res.writeHead(500,{'Content-Type':'text/plain'});res.end('Server error')})).listen(PORT,()=>console.log(`Triscent running at http://localhost:${PORT}`));
 
-// unified customer + owner-staff system v12
+// unified customer + owner-staff system v13
