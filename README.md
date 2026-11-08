@@ -34,33 +34,41 @@ URL: `http://localhost:3000`
 
 Customers can browse without an account. They create their own account when they want to order.
 
-Customer functions include product browsing, search and filtering, product details, Scent Finder, saved products, cart, gift customization, checkout, payment reference submission, order history, order tracking, claim codes, reviews, and concerns.
+Customer functions include product browsing, search and filtering, product details, Scent Finder, cart, gift customization, checkout, payment reference submission, order history, order tracking, claim codes, reviews, and concerns.
 
-## Staff Portal
+## Owner / Staff Management Portal
 
-URL: `http://localhost:3000/staff/login`
+URL: `http://localhost:3000/management/login`
 
-Initial account:
+Both Owner and Staff use the same login page, the same dashboard, the same navigation, and the same management features.
 
-- Email: `staff@triscent.local`
-- Password: `Staff123!`
+Initial accounts:
 
-Staff can process orders, verify payments, update order status, confirm claim codes, view customers, and handle reviews and concerns. Staff cannot manage product stock, reports, or staff accounts.
+- Owner: `admin@triscent.local` / `Admin123!`
+- Staff: `staff@triscent.local` / `Staff123!`
 
-## Owner Portal
+Management functions include overview, products and inventory, orders, customers, reviews and concerns, reports, live database viewer, and staff account management.
 
-URL: `http://localhost:3000/owner/login`
+## Two-side system
 
-Initial account:
+The system has only two sides:
 
-- Email: `admin@triscent.local`
-- Password: `Admin123!`
+1. Customer Store
+2. Owner / Staff Management
 
-The owner can manage products and stock, orders, customers, reviews and concerns, sales reports, CSV exports, and staff accounts.
+Old `/owner` and `/staff` links only redirect into the shared `/management` side. There are no separate Owner and Staff interfaces.
 
-## Portal separation
+## Product photo upload
 
-Customer, staff, and owner accounts use separate access flows. When a staff or owner account is signed in, customer shopping routes redirect back to the correct management portal. Staff cannot open owner-only pages.
+Upload these five JPG files to `public/assets/products/`:
+
+- `baby-powder.jpg`
+- `lavender.jpg`
+- `warm-cotton.jpg`
+- `sea-breeze.jpg`
+- `pomegranate.jpg`
+
+The database automatically assigns those images to every size of the matching scent. Vanilla, Coffee, Strawberry, and Cinnamon keep the default image until real photos are provided.
 
 ## Stop the server
 
@@ -140,8 +148,6 @@ After this, send the generated Railway URL to the beneficiary.
 
 Customer: `https://YOUR-DOMAIN.up.railway.app`
 
-Staff: `https://YOUR-DOMAIN.up.railway.app/staff/login`
-
-Owner: `https://YOUR-DOMAIN.up.railway.app/owner/login`
+Owner / Staff: `https://YOUR-DOMAIN.up.railway.app/management/login`
 
 The application already reads Railway's `PORT` environment variable and supports `DB_PATH` for persistent SQLite storage.
