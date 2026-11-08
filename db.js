@@ -154,12 +154,12 @@ function init() {
     const scentInfo = {
       'Vanilla':['sweet','Vanilla','Cozy','/assets/products/default.svg'],
       'Coffee':['sweet','Coffee','Energy','/assets/products/default.svg'],
-      'Lavender':['floral','Lavender','Relax','/assets/products/default.svg'],
+      'Lavender':['floral','Lavender','Relax','/assets/products/lavender.jpg'],
       'Strawberry':['fruity','Strawberry','Romantic','/assets/products/default.svg'],
-      'Warm Cotton':['fresh','Warm Cotton','Fresh','/assets/products/default.svg'],
-      'Pomegranate':['fruity','Pomegranate','Energy','/assets/products/default.svg'],
-      'Sea Breeze':['fresh','Sea Breeze','Fresh','/assets/products/default.svg'],
-      'Baby Powder':['fresh','Baby Powder','Calm','/assets/products/default.svg'],
+      'Warm Cotton':['fresh','Warm Cotton','Fresh','/assets/products/warm-cotton.jpg'],
+      'Pomegranate':['fruity','Pomegranate','Energy','/assets/products/pomegranate.jpg'],
+      'Sea Breeze':['fresh','Sea Breeze','Fresh','/assets/products/sea-breeze.jpg'],
+      'Baby Powder':['fresh','Baby Powder','Calm','/assets/products/baby-powder.jpg'],
       'Cinnamon':['woody','Cinnamon','Cozy','/assets/products/default.svg']
     };
     const priceList = {
@@ -176,6 +176,27 @@ function init() {
         const slug = `${name.toLowerCase().replace(/[^a-z0-9]+/g,'-')}-${size.toLowerCase()}`;
         ins.run(name,slug,catId[cat],`Triscent ${name} scented candle in ${size} size.`,notes,mood,size,price,15,image);
       }
+    }
+  }
+
+  // Sync real Triscent image paths and official prices into existing databases.
+  const imageByName = {
+    'Lavender':'/assets/products/lavender.jpg',
+    'Warm Cotton':'/assets/products/warm-cotton.jpg',
+    'Pomegranate':'/assets/products/pomegranate.jpg',
+    'Sea Breeze':'/assets/products/sea-breeze.jpg',
+    'Baby Powder':'/assets/products/baby-powder.jpg'
+  };
+  const officialPrices = {
+    '100ML': {'Vanilla':230,'Coffee':230,'Lavender':240,'Strawberry':240,'Warm Cotton':260,'Pomegranate':250,'Sea Breeze':250,'Baby Powder':240,'Cinnamon':240},
+    '150ML': {'Vanilla':280,'Coffee':280,'Lavender':280,'Warm Cotton':320,'Pomegranate':310,'Sea Breeze':300,'Baby Powder':280,'Cinnamon':280},
+    '250ML': {'Vanilla':300,'Coffee':360,'Lavender':370,'Warm Cotton':440,'Pomegranate':430,'Sea Breeze':430,'Baby Powder':420,'Cinnamon':390},
+    '300ML': {'Vanilla':400,'Coffee':400,'Lavender':420,'Warm Cotton':520,'Pomegranate':500,'Sea Breeze':500,'Baby Powder':480,'Cinnamon':430}
+  };
+  const syncProduct = db.prepare('UPDATE products SET price=?, image=? WHERE name=? AND size=?');
+  for (const [size, scents] of Object.entries(officialPrices)) {
+    for (const [name, price] of Object.entries(scents)) {
+      syncProduct.run(price, imageByName[name] || '/assets/products/default.svg', name, size);
     }
   }
 }
