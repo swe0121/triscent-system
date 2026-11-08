@@ -28,7 +28,7 @@ function customerHeader(user, cartCount, csrf) {
 
 function managementShell(user, csrf, body) {
   const nav = [
-    ['Overview', '/management'],
+    ['Overview', '/management/dashboard'],
     ['Products & Inventory', '/management/products'],
     ['Orders', '/management/orders'],
     ['Customers', '/management/customers'],
@@ -39,7 +39,7 @@ function managementShell(user, csrf, body) {
   ];
   return `<div class="admin-layout management-shell">
     <aside class="admin-sidebar">
-      <a class="admin-brand" href="/management">${logo()}</a>
+      <a class="admin-brand" href="/management/dashboard">${logo()}</a>
       <div class="admin-user"><strong>${esc(user?.name || 'Triscent')}</strong><span>Owner / Staff</span></div>
       <nav class="admin-nav">${nav.map(([label,href])=>`<a href="${href}">${label}</a>`).join('')}</nav>
       <div class="admin-sidebar-bottom">
@@ -54,9 +54,9 @@ function managementShell(user, csrf, body) {
 }
 
 function portalLoginLayout({portal='management', body='', flash=''}) {
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Owner / Staff Sign In | Triscent</title><meta name="description" content="Triscent management sign in"><link rel="stylesheet" href="/styles.css?v=11"></head><body class="store-body">
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Owner / Staff Sign In | Triscent</title><meta name="description" content="Triscent management sign in"><link rel="stylesheet" href="/styles.css?v=12"></head><body class="store-body">
     <main class="auth-page"><div class="auth-card"><span class="eyebrow">OWNER / STAFF PORTAL</span><h1>Sign In</h1><p>Use your assigned Triscent owner or staff account. Both account types use the same management portal.</p>${flash?`<div class="flash portal-inline-flash">${esc(flash)}</div>`:''}${body}</div></main>
-    <script src="/app.js?v=11"></script>
+    <script src="/app.js?v=12"></script>
   </body></html>`;
 }
 
@@ -64,7 +64,7 @@ function layout({title='Triscent', body='', user=null, cartCount=0, csrf='', adm
   const content = admin
     ? managementShell(user, csrf, `${flash?`<div class="admin-flash">${esc(flash)}</div>`:''}${body}`)
     : `${customerHeader(user, cartCount, csrf)}${flash?`<div class="flash">${esc(flash)}</div>`:''}<main>${body}</main><footer class="site-footer"><div>${logo()}<p>Scented candles for everyday spaces and gift giving.</p></div><div><strong>Shop</strong><a href="/shop">All products</a><a href="/scent-finder">Scent Finder</a><a href="/price-list">Price List</a></div><div><strong>Account</strong><a href="/customer/login">Customer sign in</a><a href="/account">My orders</a><a href="/management/login">Owner / Staff sign in</a></div><div><strong>Triscent</strong><a href="/about">About</a></div></footer>`;
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)} | Triscent</title><meta name="description" content="Triscent scented candle ordering system"><link rel="stylesheet" href="/styles.css?v=11"></head><body class="${admin?'admin-body':'store-body'}">${content}<script src="/app.js?v=11"></script></body></html>`;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)} | Triscent</title><meta name="description" content="Triscent scented candle ordering system"><link rel="stylesheet" href="/styles.css?v=12"></head><body class="${admin?'admin-body':'store-body'}">${content}<script src="/app.js?v=12"></script></body></html>`;
 }
 
 function productCard(p, csrf='', user=null) {
