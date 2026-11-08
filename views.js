@@ -54,9 +54,9 @@ function managementShell(user, csrf, body) {
 }
 
 function portalLoginLayout({portal='management', body='', flash=''}) {
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Owner / Staff Sign In | Triscent</title><meta name="description" content="Triscent management sign in"><link rel="stylesheet" href="/styles.css?v=9"></head><body class="store-body">
-    <main class="auth-page"><div class="auth-card"><span class="eyebrow">OWNER / STAFF PORTAL</span><h1>Sign In</h1><p>Use your assigned Triscent owner or staff account. The system will open the correct portal automatically.</p>${flash?`<div class="flash portal-inline-flash">${esc(flash)}</div>`:''}${body}</div></main>
-    <script src="/app.js?v=9"></script>
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Owner / Staff Sign In | Triscent</title><meta name="description" content="Triscent management sign in"><link rel="stylesheet" href="/styles.css?v=10"></head><body class="store-body">
+    <main class="auth-page"><div class="auth-card"><span class="eyebrow">OWNER / STAFF PORTAL</span><h1>Sign In</h1><p>Use your assigned Triscent owner or staff account. Both account types use the same management portal.</p>${flash?`<div class="flash portal-inline-flash">${esc(flash)}</div>`:''}${body}</div></main>
+    <script src="/app.js?v=10"></script>
   </body></html>`;
 }
 
@@ -64,12 +64,12 @@ function layout({title='Triscent', body='', user=null, cartCount=0, csrf='', adm
   const content = admin
     ? managementShell(user, csrf, `${flash?`<div class="admin-flash">${esc(flash)}</div>`:''}${body}`)
     : `${customerHeader(user, cartCount, csrf)}${flash?`<div class="flash">${esc(flash)}</div>`:''}<main>${body}</main><footer class="site-footer"><div>${logo()}<p>Scented candles for everyday spaces and gift giving.</p></div><div><strong>Shop</strong><a href="/shop">All products</a><a href="/scent-finder">Scent Finder</a><a href="/price-list">Price List</a></div><div><strong>Account</strong><a href="/login">Customer sign in</a><a href="/account">My orders</a><a href="/management/login">Owner / Staff sign in</a></div><div><strong>Triscent</strong><a href="/about">About</a></div></footer>`;
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)} | Triscent</title><meta name="description" content="Triscent scented candle ordering system"><link rel="stylesheet" href="/styles.css?v=9"></head><body class="${admin?'admin-body':'store-body'}">${content}<script src="/app.js?v=9"></script></body></html>`;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)} | Triscent</title><meta name="description" content="Triscent scented candle ordering system"><link rel="stylesheet" href="/styles.css?v=10"></head><body class="${admin?'admin-body':'store-body'}">${content}<script src="/app.js?v=10"></script></body></html>`;
 }
 
 function productCard(p, csrf='', user=null) {
   return `<article class="product-card">
-    <a href="/product?id=${p.id}" class="product-image-wrap"><img src="${p.image}" alt="${esc(p.name)}"></a>
+    <a href="/product?id=${p.id}" class="product-image-wrap"><img src="${p.image}" onerror="this.onerror=null;this.src='/assets/products/default.svg'" alt="${esc(p.name)}"></a>
     <div class="product-card-body">
       <div class="product-card-head">
         <div><h3><a href="/product?id=${p.id}">${esc(p.name)}</a></h3><p>${esc(p.category_name)} | ${esc(p.size)}</p></div>
