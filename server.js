@@ -33,9 +33,9 @@ function csrfOk(s,b){if(!b.csrf)return false;const a=Buffer.from(String(b.csrf))
 function portalHome(s){return s.user?.role==='owner'?'/owner':s.user?.role==='staff'?'/staff':'/'}
 function portalBase(s){return s.user?.role==='owner'?'/owner':'/staff'}
 function requireCustomer(s,res,next='/login'){if(!s.user){setFlash(s.row.id,'Please sign in first. You can browse without an account, but checkout requires sign in.');redirect(res,`${next}?next=${encodeURIComponent('/checkout')}`);return false}if(s.user.role!=='customer'){redirect(res,portalHome(s));return false}return true}
-function requireAdmin(s,res){if(!s.user||!['staff','owner'].includes(s.user.role)){setFlash(s.row.id,'Staff or owner access required.');redirect(res,'/staff/login');return false}return true}
-function requireStaff(s,res){if(!s.user||s.user.role!=='staff'){if(s.user?.role==='owner')redirect(res,'/owner');else{setFlash(s.row.id,'Staff access required.');redirect(res,'/staff/login')}return false}return true}
-function requireOwner(s,res){if(!s.user||s.user.role!=='owner'){if(s.user?.role==='staff')redirect(res,'/staff');else{setFlash(s.row.id,'Owner access required.');redirect(res,'/owner/login')}return false}return true}
+function requireAdmin(s,res){if(!s.user||!['staff','owner'].includes(s.user.role)){setFlash(s.row.id,'Owner or staff access required.');redirect(res,'/management/login');return false}return true}
+function requireStaff(s,res){if(!s.user||s.user.role!=='staff'){if(s.user?.role==='owner')redirect(res,'/owner');else{setFlash(s.row.id,'Staff access required.');redirect(res,'/management/login')}return false}return true}
+function requireOwner(s,res){if(!s.user||s.user.role!=='owner'){if(s.user?.role==='staff')redirect(res,'/staff');else{setFlash(s.row.id,'Owner access required.');redirect(res,'/management/login')}return false}return true}
 function blockBackofficeStore(s,res){if(s.user&&['staff','owner'].includes(s.user.role)){redirect(res,portalHome(s));return true}return false}
 function stockClass(p){return p.stock<=0?'Out of stock':p.stock<=p.low_stock_threshold?`${p.stock} left`:`${p.stock} available`}
 function cartDetails(cart){return cart.map(c=>{const p=db.prepare('SELECT p.*,c.name category_name FROM products p JOIN categories c ON c.id=p.category_id WHERE p.id=? AND p.active=1').get(c.product_id);return p?{...c,product:p,subtotal:p.price*c.qty}:null}).filter(Boolean)}
@@ -86,7 +86,7 @@ function cartPage(s){const items=cartDetails(s.cart);const total=items.reduce((a
 
 function checkoutPage(s){const items=cartDetails(s.cart);const total=items.reduce((a,i)=>a+i.subtotal,0);if(!items.length)return `<section class="section narrow"><div class="empty"><h2>Your cart is empty.</h2><a class="btn primary" href="/shop">Shop now</a></div></section>`;return `<section class="checkout"><div class="checkout-form"><span class="eyebrow">CHECKOUT</span><h1>Confirm your order</h1><div class="notice">Orders are for pickup. After staff verifies your payment reference, a unique claim code will appear in My Orders.</div><form method="post" action="/checkout"><input type="hidden" name="csrf" value="${s.row.csrf}"><label>Full Name<input name="name" value="${esc(s.user.name)}" required></label><label>Phone Number<input name="contact" value="${esc(s.user.contact)}" required></label><label>Pickup note / special instruction<textarea name="notes" placeholder="Optional"></textarea></label><label>Payment Reference Number<input name="payment_reference" required placeholder="Example: GCash reference number"></label><button class="btn primary wide">Place Order</button></form></div><aside class="order-summary"><h2>Order Summary</h2>${items.map(i=>`<div><img src="${i.product.image}"><span>${esc(i.product.name)} x ${i.qty}</span><strong>${money(i.subtotal)}</strong></div>`).join('')}<hr><div class="summary-total"><span>Total</span><strong>${money(total)}</strong></div></aside></section>`}
 
-function accountPage(s){const orders=db.prepare('SELECT * FROM orders WHERE user_id=? ORDER BY id DESC').all(s.user.id);return `<section class="account-layout"><aside class="account-nav"><div class="avatar">${esc(s.user.name[0])}</div><h3>${esc(s.user.name)}</h3><p>${esc(s.user.email)}</p><a class="active" href="/account">My Orders</a><a href="/profile">My Profile</a><a href="/wishlist">Wishlist</a></aside><div class="account-main"><h1>My Orders</h1>${orders.length?orders.map(o=>`<article class="order-card"><div><strong>${esc(o.order_no)}</strong><span>${new Date(o.created_at+'Z').toLocaleDateString()}</span></div><div><span class="status">${esc(o.order_status)}</span><span class="payment ${o.payment_status==='Verified'?'ok':''}">${esc(o.payment_status)}</span></div><strong>${money(o.total)}</strong><a class="btn small" href="/order?id=${o.id}">View Details</a></article>`).join(''):'<div class="empty">No orders yet. <a href="/shop">Start shopping</a>.</div>'}</div></section>`}
+function accountPage(s){const orders=db.prepare('SELECT * FROM orders WHERE user_id=? ORDER BY id DESC').all(s.user.id);return `<section class="account-layout"><aside class="account-nav"><div class="avatar">${esc(s.user.name[0])}</div><h3>${esc(s.user.name)}</h3><p>${esc(s.user.email)}</p><a class="active" href="/account">My Orders</a><a href="/profile">My Profile</a></aside><div class="account-main"><h1>My Orders</h1>${orders.length?orders.map(o=>`<article class="order-card"><div><strong>${esc(o.order_no)}</strong><span>${new Date(o.created_at+'Z').toLocaleDateString()}</span></div><div><span class="status">${esc(o.order_status)}</span><span class="payment ${o.payment_status==='Verified'?'ok':''}">${esc(o.payment_status)}</span></div><strong>${money(o.total)}</strong><a class="btn small" href="/order?id=${o.id}">View Details</a></article>`).join(''):'<div class="empty">No orders yet. <a href="/shop">Start shopping</a>.</div>'}</div></section>`}
 
 function orderPage(s,url){const id=Number(url.searchParams.get('id'));const o=db.prepare('SELECT * FROM orders WHERE id=? AND user_id=?').get(id,s.user.id);if(!o)return null;const items=db.prepare('SELECT * FROM order_items WHERE order_id=?').all(id);const completed=o.order_status==='Completed';return `<section class="section narrow"><div class="section-head"><div><span class="eyebrow">ORDER ${esc(o.order_no)}</span><h1>Order Details</h1></div><a href="/account">My Orders</a></div><div class="order-detail-card"><div class="tracking"><span class="${['Pending','Confirmed','Ready for Claiming','Completed'].includes(o.order_status)?'done':''}">Order Placed</span><span class="${['Confirmed','Ready for Claiming','Completed'].includes(o.order_status)?'done':''}">Confirmed</span><span class="${['Ready for Claiming','Completed'].includes(o.order_status)?'done':''}">Ready</span><span class="${o.order_status==='Completed'?'done':''}">Completed</span></div><div class="order-meta"><div><small>Status</small><strong>${esc(o.order_status)}</strong></div><div><small>Payment</small><strong>${esc(o.payment_status)}</strong></div><div><small>Total</small><strong>${money(o.total)}</strong></div></div>${o.claim_code?`<div class="claim-box"><span>Your claim code</span><strong>${esc(o.claim_code)}</strong><small>Show this code to staff when claiming your order.</small></div>`:''}${o.payment_status==='Rejected'?`<form method="post" action="/order/payment/resubmit" class="inline-form"><input type="hidden" name="csrf" value="${s.row.csrf}"><input type="hidden" name="order_id" value="${o.id}"><label>New payment reference<input name="payment_reference" required></label><button class="btn primary">Resubmit</button></form>`:''}<div class="order-items">${items.map(i=>`<div><span>${esc(i.product_name)} x ${i.quantity}</span><strong>${money(i.price*i.quantity)}</strong></div>`).join('')}</div></div>
   ${completed?`<section class="feedback-box"><h2>Review or send a concern</h2>${items.map(i=>`<form method="post" action="/review/create"><input type="hidden" name="csrf" value="${s.row.csrf}"><input type="hidden" name="order_id" value="${o.id}"><input type="hidden" name="product_id" value="${i.product_id}"><strong>${esc(i.product_name)}</strong><select name="rating"><option value="5">5 - Excellent</option><option value="4">4 - Good</option><option value="3">3 - Okay</option><option value="2">2 - Poor</option><option value="1">1 - Bad</option></select><textarea name="body" required placeholder="Write your review"></textarea><button class="btn small">Submit Review</button></form>`).join('')}<form method="post" action="/concern/create"><input type="hidden" name="csrf" value="${s.row.csrf}"><input type="hidden" name="order_id" value="${o.id}"><textarea name="body" required placeholder="Product concern or issue"></textarea><button class="btn small">Submit Concern</button></form></section>`:''}</section>`}
@@ -144,7 +144,7 @@ function staffAccountsPage(s){
 }
 
 function ownerDatabasePage(s,url){
-  const allowedTables=['users','categories','products','orders','order_items','reviews','concerns','wishlists'];
+  const allowedTables=['users','categories','products','orders','order_items','reviews','concerns'];
   let table=(url.searchParams.get('table')||'orders').toLowerCase();
   if(!allowedTables.includes(table))table='orders';
 
@@ -175,11 +175,23 @@ function ownerDatabasePage(s,url){
   </section>`;
 }
 
+function priceListPage(){
+  const rows=[
+    ['100ML',230,230,240,240,260,250,250,240,240],
+    ['150ML',280,280,280,'—',320,310,300,280,280],
+    ['250ML',300,360,370,'—',440,430,430,420,390],
+    ['300ML',400,400,420,'—',520,500,500,480,430]
+  ];
+  const heads=['Size','Vanilla','Coffee','Lavender','Strawberry','Warm Cotton','Pomegranate','Sea Breeze','Baby Powder','Cinnamon'];
+  return `<section class="section price-list-page"><div class="section-head"><div><span class="eyebrow">TRISCENT</span><h1>Price List</h1><p>Current scented candle prices by size.</p></div><a href="/shop">Shop candles</a></div><div class="price-table-wrap"><table class="price-table"><thead><tr>${heads.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((v,i)=>`<td>${i===0?v:(v==='—'?'—':money(v))}</td>`).join('')}</tr>`).join('')}</tbody></table></div><div class="offer-grid"><article><strong>Souvenir & Gift Giving</strong><span>₱150–₱300</span></article><article><strong>Candle Refills / Candle Molds / Wax Melts</strong><span>As low as ₱100</span></article></div></section>`;
+}
+
 function loginPage(s,url,portal='customer'){
   const isCustomer=portal==='customer';
-  const defaultNext=isCustomer?'/account':portal==='owner'?'/owner':'/staff';
+  const isManagement=portal==='management';
+  const defaultNext=isCustomer?'/account':'/owner';
   const form=`<form method="post" action="/login" class="stack-form portal-form"><input type="hidden" name="csrf" value="${s.row.csrf}"><input type="hidden" name="portal" value="${portal}"><input type="hidden" name="next" value="${esc(url.searchParams.get('next')||defaultNext)}"><label>Email<input type="email" name="email" autocomplete="email" required></label><label>Password<input type="password" name="password" autocomplete="current-password" required></label><button class="btn primary full">Sign In</button></form>`;
-  if(!isCustomer)return `${form}<p class="portal-help">Use the account assigned to this portal. Customer accounts cannot sign in here.</p>`;
+  if(isManagement)return `${form}<p class="portal-help">Owner and staff use the same login. The system will open the correct portal based on the account role.</p>`;
   return `<section class="auth-page"><div class="auth-card"><span class="eyebrow">CUSTOMER ACCOUNT</span><h1>Sign In</h1><p>Browse without an account. Sign in when you are ready to order or check your purchases.</p>${form}<p>New to Triscent? <a href="/register">Create an account</a></p></div></section>`;
 }
 
@@ -187,10 +199,10 @@ async function handle(req,res){
   const url=new URL(req.url,`http://${req.headers.host||'localhost'}`); const s=getSession(req,res);
   if(url.pathname.startsWith('/assets/')||url.pathname==='/styles.css'||url.pathname==='/app.js'){
     const rel=url.pathname==='/styles.css'?'/public/styles.css':url.pathname==='/app.js'?'/public/app.js':'/public'+url.pathname; const file=path.join(ROOT,rel);
-    if(!file.startsWith(path.join(ROOT,'public'))||!fs.existsSync(file))return notFound(res); const ext=path.extname(file); const type=ext==='.css'?'text/css':ext==='.js'?'application/javascript':ext==='.svg'?'image/svg+xml':'application/octet-stream';res.writeHead(200,{'Content-Type':type,'Cache-Control':'no-store'});return fs.createReadStream(file).pipe(res);
+    if(!file.startsWith(path.join(ROOT,'public'))||!fs.existsSync(file))return notFound(res); const ext=path.extname(file); const type=ext==='.css'?'text/css':ext==='.js'?'application/javascript':ext==='.svg'?'image/svg+xml':ext==='.jpg'||ext==='.jpeg'?'image/jpeg':ext==='.png'?'image/png':'application/octet-stream';res.writeHead(200,{'Content-Type':type,'Cache-Control':'no-store'});return fs.createReadStream(file).pipe(res);
   }
   if(req.method==='GET'){
-    const storeRoute=['/','/shop','/product','/cart','/checkout','/login','/register','/account','/profile','/order','/wishlist','/compare','/scent-finder','/about'].includes(url.pathname);
+    const storeRoute=['/','/shop','/product','/cart','/checkout','/login','/register','/account','/profile','/order','/compare','/scent-finder','/price-list','/about'].includes(url.pathname);
     if(storeRoute && blockBackofficeStore(s,res))return;
 
     if(url.pathname==='/')return html(res,s,homePage(s),'Triscent');
@@ -199,19 +211,18 @@ async function handle(req,res){
     if(url.pathname==='/cart')return html(res,s,cartPage(s),'Cart');
     if(url.pathname==='/checkout'){if(!requireCustomer(s,res))return;return html(res,s,checkoutPage(s),'Checkout')}
     if(url.pathname==='/login')return html(res,s,loginPage(s,url,'customer'),'Customer Sign In');
+    if(url.pathname==='/price-list')return html(res,s,priceListPage(),'Price List');
     if(url.pathname==='/register')return html(res,s,`<section class="auth-page"><div class="auth-card"><span class="eyebrow">CREATE ACCOUNT</span><h1>Join Triscent</h1><form method="post" action="/register" class="stack-form"><input type="hidden" name="csrf" value="${s.row.csrf}"><label>Full Name<input name="name" required></label><label>Email<input type="email" name="email" required></label><label>Phone<input name="contact"></label><label>Password<input type="password" name="password" minlength="8" required></label><button class="btn primary wide">Create Account</button></form><p>Already registered? <a href="/login">Sign in</a></p></div></section>`,'Register');
     if(url.pathname==='/account'){if(!requireCustomer(s,res))return;return html(res,s,accountPage(s),'My Orders')}
     if(url.pathname==='/profile'){if(!requireCustomer(s,res))return;return html(res,s,`<section class="section narrow"><h1>My Profile</h1><form method="post" action="/profile" class="stack-form"><input type="hidden" name="csrf" value="${s.row.csrf}"><label>Name<input name="name" value="${esc(s.user.name)}" required></label><label>Email<input value="${esc(s.user.email)}" disabled></label><label>Phone<input name="contact" value="${esc(s.user.contact)}"></label><label>Address<input name="address" value="${esc(s.user.address)}"></label><button class="btn primary">Save Profile</button></form></section>`,'Profile')}
     if(url.pathname==='/order'){if(!requireCustomer(s,res))return;const b=orderPage(s,url);return b?html(res,s,b,'Order'):notFound(res)}
-    if(url.pathname==='/wishlist'){if(!requireCustomer(s,res))return;const ps=db.prepare(`SELECT p.*,c.name category_name FROM wishlists w JOIN products p ON p.id=w.product_id JOIN categories c ON c.id=p.category_id WHERE w.user_id=? ORDER BY w.created_at DESC`).all(s.user.id);return html(res,s,`<section class="section"><div class="section-head"><h1>Wishlist</h1><a href="/shop">Shop</a></div><div class="product-grid">${ps.length?ps.map(p=>productCard(p,s.row.csrf,s.user)).join(''):'<div class="empty">No saved products yet.</div>'}</div></section>`,'Wishlist')}
     if(url.pathname==='/compare'){const products=db.prepare('SELECT p.*,c.name category_name FROM products p JOIN categories c ON c.id=p.category_id WHERE p.active=1').all();const ids=(url.searchParams.get('ids')||'').split(',').map(Number).filter(Boolean).slice(0,3);const picked=ids.map(id=>products.find(p=>p.id===id)).filter(Boolean);return html(res,s,`<section class="section"><h1>Compare Products</h1><form class="compare-picker" action="/compare"><select name="ids" multiple size="8">${products.map(p=>`<option value="${p.id}" ${ids.includes(p.id)?'selected':''}>${esc(p.name)}</option>`).join('')}</select><p>Hold Ctrl and select up to 3 products, then use a comma list in the URL if your browser does not submit multiple selections correctly.</p><input name="ids" placeholder="Example: 1,2,3" value="${esc(ids.join(','))}"><button class="btn primary">Compare</button></form>${picked.length?`<div class="compare-grid">${picked.map(p=>`<article><img src="${p.image}"><h2>${esc(p.name)}</h2><strong>${money(p.price)}</strong><p>${esc(p.scent_notes)}</p><p>${esc(p.size)} | ${stockClass(p)}</p><p>${esc(p.description)}</p></article>`).join('')}</div>`:''}</section>`,'Compare')}
     if(url.pathname==='/scent-finder'){const mood=url.searchParams.get('mood')||'';const scent=url.searchParams.get('scent')||'';let matches=[];if(mood||scent){matches=db.prepare(`SELECT p.*,c.name category_name FROM products p JOIN categories c ON c.id=p.category_id WHERE p.active=1 AND (?='' OR lower(p.mood)=lower(?)) AND (?='' OR lower(c.name)=lower(?)) ORDER BY stock DESC`).all(mood,mood,scent,scent)}return html(res,s,`<section class="finder"><div><span class="eyebrow">SCENT FINDER</span><h1>What mood are you going for?</h1><p>Pick a mood and scent family. We will match it against Triscent product data.</p><form action="/scent-finder" class="finder-form"><label>Mood<select name="mood"><option value="">Any mood</option>${['Relax','Cozy','Fresh','Romantic','Energy','Calm'].map(x=>`<option ${mood===x?'selected':''}>${x}</option>`).join('')}</select></label><label>Scent family<select name="scent"><option value="">Any family</option>${db.prepare('SELECT name FROM categories').all().map(c=>`<option ${scent===c.name?'selected':''}>${esc(c.name)}</option>`).join('')}</select></label><button class="btn primary">Find Candles</button></form></div>${(mood||scent)?`<div class="product-grid">${matches.length?matches.map(p=>productCard(p,s.row.csrf,s.user)).join(''):'<div class="empty">No exact match. Try another combination.</div>'}</div>`:''}</section>`,'Scent Finder')}
     if(url.pathname==='/about')return html(res,s,`<section class="section narrow prose"><span class="eyebrow">ABOUT TRISCENT</span><h1>Scented candles made easier to browse and order</h1><p>Triscent offers scented candles through an online store where customers can browse the collection, compare products, choose scents based on their preferences, place pickup orders, and keep track of confirmed purchases. Gift packaging and personal messages are available for selected orders.</p></section>`,'About');
 
-    if(url.pathname==='/staff/login'){if(s.user?.role==='staff')return redirect(res,'/staff');if(s.user?.role==='owner')return redirect(res,'/owner');return portalHtml(res,s,loginPage(s,url,'staff'),'staff')}
-    if(url.pathname==='/owner/login'){if(s.user?.role==='owner')return redirect(res,'/owner');if(s.user?.role==='staff')return redirect(res,'/staff');return portalHtml(res,s,loginPage(s,url,'owner'),'owner')}
-    if(url.pathname==='/admin/login')return redirect(res,'/owner/login');
-    if(url.pathname.startsWith('/admin'))return redirect(res,s.user&&['staff','owner'].includes(s.user.role)?portalHome(s):'/staff/login');
+    if(url.pathname==='/management/login'){if(s.user&&['staff','owner'].includes(s.user.role))return redirect(res,portalHome(s));return portalHtml(res,s,loginPage(s,url,'management'),'management')}
+    if(url.pathname==='/staff/login'||url.pathname==='/owner/login'||url.pathname==='/admin/login')return redirect(res,'/management/login');
+    if(url.pathname.startsWith('/admin'))return redirect(res,s.user&&['staff','owner'].includes(s.user.role)?portalHome(s):'/management/login');
 
     if(url.pathname==='/staff'){if(!requireStaff(s,res))return;return html(res,s,staffDashboard(s),'Order Processing',true)}
     if(url.pathname==='/staff/orders'){if(!requireStaff(s,res))return;return html(res,s,adminOrders(s),'Orders',true)}
@@ -240,19 +251,18 @@ async function handle(req,res){
     }
     if(url.pathname==='/login'){
       const portal=b.portal||'customer';
-      const loginPath=portal==='owner'?'/owner/login':portal==='staff'?'/staff/login':'/login';
+      const loginPath=portal==='management'?'/management/login':'/login';
       const u=db.prepare('SELECT * FROM users WHERE email=? AND active=1').get((b.email||'').trim().toLowerCase());
       if(!u||!verifyPassword(b.password||'',u.password_hash)){setFlash(s.row.id,'Invalid email or password.');return redirect(res,loginPath)}
-      if(portal==='customer'&&u.role!=='customer'){setFlash(s.row.id,`This account belongs to the ${u.role} portal.`);return redirect(res,u.role==='owner'?'/owner/login':'/staff/login')}
-      if(portal==='staff'&&u.role!=='staff'){setFlash(s.row.id,'This is not a staff account.');return redirect(res,'/staff/login')}
-      if(portal==='owner'&&u.role!=='owner'){setFlash(s.row.id,'This is not an owner account.');return redirect(res,'/owner/login')}
-      db.prepare("UPDATE sessions SET user_id=?,cart_json=CASE WHEN ?='customer' THEN cart_json ELSE '[]' END WHERE id=?").run(u.id,portal,s.row.id);
+      if(portal==='customer'&&u.role!=='customer'){setFlash(s.row.id,'Owner and staff accounts sign in through the management login.');return redirect(res,'/management/login')}
+      if(portal==='management'&&!['owner','staff'].includes(u.role)){setFlash(s.row.id,'Customer accounts use the customer login.');return redirect(res,'/management/login')}
+      db.prepare("UPDATE sessions SET user_id=?,cart_json=CASE WHEN ?='customer' THEN cart_json ELSE '[]' END WHERE id=?").run(u.id,u.role,s.row.id);
       setFlash(s.row.id,`Welcome back, ${u.name.split(' ')[0]}.`);
       if(u.role==='owner')return redirect(res,'/owner');
       if(u.role==='staff')return redirect(res,'/staff');
-      let next=b.next||'/account';if(!next.startsWith('/')||next.startsWith('/owner')||next.startsWith('/staff')||next.startsWith('/admin'))next='/account';return redirect(res,next)
+      let next=b.next||'/account';if(!next.startsWith('/')||next.startsWith('/owner')||next.startsWith('/staff')||next.startsWith('/admin')||next.startsWith('/management'))next='/account';return redirect(res,next)
     }
-    if(url.pathname==='/logout'){const role=s.user?.role;db.prepare("UPDATE sessions SET user_id=NULL,cart_json='[]' WHERE id=?").run(s.row.id);setFlash(s.row.id,'Signed out.');return redirect(res,role==='owner'?'/owner/login':role==='staff'?'/staff/login':'/')}
+    if(url.pathname==='/logout'){const role=s.user?.role;db.prepare("UPDATE sessions SET user_id=NULL,cart_json='[]' WHERE id=?").run(s.row.id);setFlash(s.row.id,'Signed out.');return redirect(res,['owner','staff'].includes(role)?'/management/login':'/')}
     if(url.pathname==='/cart/add'){
       if(blockBackofficeStore(s,res))return;
       const id=Number(b.product_id),qty=Math.max(1,Number(b.qty)||1),p=db.prepare('SELECT * FROM products WHERE id=? AND active=1').get(id);if(!p){setFlash(s.row.id,'Product not found.');return redirect(res,'/shop')}if(p.stock<=0){setFlash(s.row.id,'That product is out of stock.');return redirect(res,`/product?id=${id}`)}
@@ -263,7 +273,7 @@ async function handle(req,res){
       const id=Number(b.product_id),p=db.prepare('SELECT stock FROM products WHERE id=?').get(id),qty=Math.max(0,Number(b.qty)||0);let cart=s.cart;if(qty===0)cart=cart.filter(x=>x.product_id!==id);else for(const c of cart)if(c.product_id===id)c.qty=Math.min(qty,p?.stock||qty);saveCart(s.row.id,cart);return redirect(res,'/cart')
     }
     if(url.pathname==='/cart/remove'){if(blockBackofficeStore(s,res))return;saveCart(s.row.id,s.cart.filter(x=>x.product_id!==Number(b.product_id)));return redirect(res,'/cart')}
-    if(url.pathname==='/wishlist/toggle'){if(!requireCustomer(s,res))return;const id=Number(b.product_id);const exists=db.prepare('SELECT 1 FROM wishlists WHERE user_id=? AND product_id=?').get(s.user.id,id);if(exists)db.prepare('DELETE FROM wishlists WHERE user_id=? AND product_id=?').run(s.user.id,id);else db.prepare('INSERT OR IGNORE INTO wishlists(user_id,product_id) VALUES (?,?)').run(s.user.id,id);return redirect(res,req.headers.referer?new URL(req.headers.referer).pathname+'/wishlist'.replace('/wishlist',''):'/wishlist')}
+    if(url.pathname==='/wishlist/toggle')return redirect(res,'/account');
     if(url.pathname==='/profile'){if(!requireCustomer(s,res))return;db.prepare('UPDATE users SET name=?,contact=?,address=? WHERE id=?').run((b.name||'').trim(),(b.contact||'').trim(),(b.address||'').trim(),s.user.id);setFlash(s.row.id,'Profile updated.');return redirect(res,'/profile')}
     if(url.pathname==='/checkout'){
       if(!requireCustomer(s,res))return;const items=cartDetails(s.cart);if(!items.length){setFlash(s.row.id,'Your cart is empty.');return redirect(res,'/cart')}
