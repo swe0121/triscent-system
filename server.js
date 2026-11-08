@@ -30,7 +30,7 @@ function portalHtml(res,s,body,portal){const flash=takeFlash(s.row.id);res.write
 function notFound(res){res.writeHead(404,{'Content-Type':'text/plain'});res.end('Not found')}
 function parseBody(req){return new Promise((resolve,reject)=>{let d='';req.on('data',c=>{d+=c;if(d.length>1e6){reject(new Error('too large'));req.destroy()}});req.on('end',()=>{const p=new URLSearchParams(d);resolve(Object.fromEntries(p.entries()))});req.on('error',reject)})}
 function csrfOk(s,b){if(!b.csrf)return false;const a=Buffer.from(String(b.csrf));const c=Buffer.from(String(s.row.csrf));return a.length===c.length && crypto.timingSafeEqual(a,c)}
-function portalHome(s){return s.user&&['owner','staff'].includes(s.user.role)?'/management':'/'}
+function portalHome(s){return s.user&&['owner','staff'].includes(s.user.role)?'/management/dashboard':'/'}
 function portalBase(s){return s.user&&['owner','staff'].includes(s.user.role)?'/management':'/management'}
 function requireCustomer(s,res,next='/login'){if(!s.user){setFlash(s.row.id,'Please sign in first. You can browse without an account, but checkout requires sign in.');redirect(res,`${next}?next=${encodeURIComponent('/checkout')}`);return false}if(s.user.role!=='customer'){redirect(res,portalHome(s));return false}return true}
 function requireAdmin(s,res){if(!s.user||!['staff','owner'].includes(s.user.role)){setFlash(s.row.id,'Owner or staff access required.');redirect(res,'/management/login');return false}return true}
@@ -240,7 +240,8 @@ async function handle(req,res){
     if(url.pathname.startsWith('/admin'))return redirect(res,s.user&&['staff','owner'].includes(s.user.role)?portalHome(s):'/management/login');
 
     // Unified Owner/Staff management side
-    if(url.pathname==='/management'){if(!requireAdmin(s,res))return;return html(res,s,ownerDashboard(s),'Management',true)}
+    if(url.pathname==='/management')return redirect(res,'/management/login');
+    if(url.pathname==='/management/dashboard'){if(!requireAdmin(s,res))return;return html(res,s,ownerDashboard(s),'Management',true)}
     if(url.pathname==='/management/products'){if(!requireAdmin(s,res))return;return html(res,s,adminProducts(s),'Catalog & Stock',true)}
     if(url.pathname==='/management/product/edit'){if(!requireAdmin(s,res))return;const b=adminProductEdit(s,url);return b?html(res,s,b,'Edit Product',true):notFound(res)}
     if(url.pathname==='/management/orders'){if(!requireAdmin(s,res))return;return html(res,s,adminOrders(s),'Orders',true)}
@@ -252,7 +253,7 @@ async function handle(req,res){
     if(url.pathname==='/management/users'){if(!requireAdmin(s,res))return;return html(res,s,staffAccountsPage(s),'Staff Accounts',true)}
 
     // Old links remain only as redirects so there are no separate Owner/Staff sides.
-    if(url.pathname==='/owner'||url.pathname==='/staff')return redirect(res,'/management');
+    if(url.pathname==='/owner'||url.pathname==='/staff')return redirect(res,'/management/login');
     if(url.pathname.startsWith('/owner/'))return redirect(res,'/management/'+url.pathname.slice('/owner/'.length)+(url.search||''));
     if(url.pathname.startsWith('/staff/'))return redirect(res,'/management/'+url.pathname.slice('/staff/'.length)+(url.search||''));
     return notFound(res);
@@ -273,7 +274,7 @@ async function handle(req,res){
       if(portal==='management'&&!['owner','staff'].includes(u.role)){setFlash(s.row.id,'Customer accounts use the customer login.');return redirect(res,'/management/login')}
       db.prepare("UPDATE sessions SET user_id=?,cart_json=CASE WHEN ?='customer' THEN cart_json ELSE '[]' END WHERE id=?").run(u.id,u.role,s.row.id);
       setFlash(s.row.id,`Welcome back, ${u.name.split(' ')[0]}.`);
-      if(['owner','staff'].includes(u.role))return redirect(res,'/management');
+      if(['owner','staff'].includes(u.role))return redirect(res,'/management/dashboard');
       let next=b.next||'/account';if(!next.startsWith('/')||next.startsWith('/owner')||next.startsWith('/staff')||next.startsWith('/admin')||next.startsWith('/management'))next='/account';return redirect(res,next)
     }
     if(url.pathname==='/logout'){const role=s.user?.role;db.prepare("UPDATE sessions SET user_id=NULL,cart_json='[]' WHERE id=?").run(s.row.id);setFlash(s.row.id,'Signed out.');return redirect(res,['owner','staff'].includes(role)?'/management/login':'/')}
@@ -314,4 +315,4 @@ async function handle(req,res){
 
 http.createServer((req,res)=>handle(req,res).catch(err=>{console.error(err);if(!res.headersSent)res.writeHead(500,{'Content-Type':'text/plain'});res.end('Server error')})).listen(PORT,()=>console.log(`Triscent running at http://localhost:${PORT}`));
 
-// unified customer + owner-staff system v11
+// unified customer + owner-staff system v12
