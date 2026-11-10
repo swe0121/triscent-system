@@ -57,17 +57,17 @@ function managementShell(user, csrf, body) {
 }
 
 function portalLoginLayout({portal='management', body='', flash=''}) {
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Owner / Staff Sign In | TriScents</title><meta name="description" content="TriScents management sign in"><link rel="stylesheet" href="/styles.css?v=16"></head><body class="store-body">
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Owner / Staff Sign In | TriScents</title><meta name="description" content="TriScents management sign in"><link rel="stylesheet" href="/styles.css?v=17"></head><body class="store-body">
     <main class="auth-page"><div class="auth-card"><span class="eyebrow">OWNER / STAFF PORTAL</span><h1>Sign In</h1><p>Use your assigned TriScents owner or staff account. Both account types use the same management portal.</p>${flash?`<div class="flash portal-inline-flash">${esc(flash)}</div>`:''}${body}</div></main>
-    <script src="/app.js?v=16"></script>
+    <script src="/app.js?v=17"></script>
   </body></html>`;
 }
 
 function layout({title='TriScents', body='', user=null, cartCount=0, csrf='', admin=false, flash=''}) {
   const content = admin
     ? managementShell(user, csrf, `${flash?`<div class="admin-flash">${esc(flash)}</div>`:''}${body}`)
-    : `${customerHeader(user, cartCount, csrf)}${flash?`<div class="flash">${esc(flash)}</div>`:''}<main>${body}</main><footer class="site-footer"><div>${logo()}<p>Scented candles for everyday spaces, gifts, souvenirs, and special events.</p><div class="footer-socials"><span>Instagram</span><span>TikTok</span><span>Facebook</span><span>Location</span></div></div><div><strong>Shop</strong><a href="/shop">All products</a><a href="/scent-finder">Scent Finder</a><a href="/price-list">Price List</a></div><div><strong>Help</strong><a href="/how-to-order">How to Order</a><a href="/shop-rules">Shop Rules</a><a href="/faq">FAQ</a></div><div><strong>TriScents</strong><a href="/about">About</a></div></footer>`;
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)} | TriScents</title><meta name="description" content="TriScents scented candle ordering system"><link rel="stylesheet" href="/styles.css?v=16"></head><body class="${admin?'admin-body':'store-body'}">${content}<script src="/app.js?v=16"></script></body></html>`;
+    : `${customerHeader(user, cartCount, csrf)}${flash?`<div class="flash">${esc(flash)}</div>`:''}<main>${body}</main><footer class="site-footer"><div>${logo()}<p>Scented candles for everyday spaces, gifts, souvenirs, and special events.</p><div class="footer-socials"><a href="https://www.instagram.com/tri.scents?vrfl=dGVkaHFpcWZnMWhi" target="_blank" rel="noopener">Instagram</a><a href="https://www.tiktok.com/@tri.scents?_r=1&_t=ZS-9BHKBvuvY0r" target="_blank" rel="noopener">TikTok</a><span>Facebook</span><span>Location</span></div></div><div><strong>Shop</strong><a href="/shop">All products</a><a href="/scent-finder">Scent Finder</a><a href="/price-list">Price List</a></div><div><strong>Help</strong><a href="/how-to-order">How to Order</a><a href="/shop-rules">Shop Rules</a><a href="/faq">FAQ</a></div><div><strong>TriScents</strong><a href="/about">About</a></div></footer>`;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)} | TriScents</title><meta name="description" content="TriScents scented candle ordering system"><link rel="stylesheet" href="/styles.css?v=17"></head><body class="${admin?'admin-body':'store-body'}">${content}<script src="/app.js?v=17"></script></body></html>`;
 }
 
 function productCard(p, csrf='', user=null) {

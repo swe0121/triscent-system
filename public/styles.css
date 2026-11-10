@@ -831,3 +831,102 @@ input,select,textarea{font-size:13px!important;color:#201918!important}
 .store-body .price-table th{
   background:#7b1b20!important;
 }
+
+
+/* =========================================================
+   OWNER IMAGE CONTENT V17
+   Images are user-supplied later using the fixed filenames.
+   ========================================================= */
+.image-only-page{
+  padding-top:18px!important;
+  padding-bottom:18px!important;
+}
+.single-owner-image,
+.owner-photo-grid>div{
+  width:100%;
+  min-height:260px;
+  background:#efe1d3;
+  border:1px dashed #9b7866;
+  overflow:hidden;
+}
+.single-owner-image img{
+  width:100%;
+  height:auto;
+  display:block;
+}
+.owner-photo-page h1{
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:38px;
+  margin:0 0 18px;
+  color:#3d211b;
+}
+.owner-photo-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
+.owner-photo-grid img{
+  width:100%;
+  height:100%;
+  min-height:260px;
+  aspect-ratio:4/3;
+  object-fit:cover;
+}
+.missing-image-slot{
+  min-height:300px!important;
+  background:
+    linear-gradient(135deg,rgba(123,27,32,.05),rgba(184,95,71,.10)),
+    #efe1d3!important;
+}
+.payment-image-buttons{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+.payment-image-buttons label{
+  display:block;
+  cursor:pointer;
+}
+.payment-image-buttons input{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+}
+.payment-image-card{
+  min-height:92px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:10px;
+  background:#fffaf3;
+  border:2px solid #d7b6a0;
+  transition:.15s ease;
+}
+.payment-image-card img{
+  max-width:100%;
+  max-height:68px;
+  object-fit:contain;
+}
+.payment-image-buttons input:checked + .payment-image-card{
+  border-color:#7b1b20;
+  box-shadow:0 0 0 2px rgba(123,27,32,.12);
+  background:#f8eadf;
+}
+.missing-payment-image{
+  min-height:92px;
+  background:#efe1d3;
+}
+.footer-socials a{
+  font-size:10px;
+  color:#ead9cc!important;
+  text-decoration:none;
+}
+.footer-socials a:hover{
+  text-decoration:underline;
+}
+@media(max-width:650px){
+  .owner-photo-grid,
+  .payment-image-buttons{
+    grid-template-columns:1fr;
+  }
+}
