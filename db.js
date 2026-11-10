@@ -162,12 +162,12 @@ function init() {
     const scentInfo = {
       'Vanilla':['sweet','Vanilla','Cozy','/assets/products/VANILLA.png'],
       'Coffee':['sweet','Coffee','Energy','/assets/products/COFFEE.png'],
-      'Lavender':['floral','Lavender','Relax','/assets/products/LAVENDER.png'],
+      'Lavender':['floral','Lavender','Relax','/assets/products/lavender.jpg'],
       'Strawberry':['fruity','Strawberry','Romantic','/assets/products/STRAWBERRY.png'],
-      'Warm Cotton':['fresh','Warm Cotton','Fresh','/assets/products/WARMCOTTON.png'],
-      'Pomegranate':['fruity','Pomegranate','Energy','/assets/products/POMEGRANATE.png'],
-      'Sea Breeze':['fresh','Sea Breeze','Fresh','/assets/products/SEABREEZ.png'],
-      'Baby Powder':['fresh','Baby Powder','Calm','/assets/products/BABYPOWDER.png'],
+      'Warm Cotton':['fresh','Warm Cotton','Fresh','/assets/products/warm-cotton.jpg'],
+      'Pomegranate':['fruity','Pomegranate','Energy','/assets/products/pomegranate.jpg'],
+      'Sea Breeze':['fresh','Sea Breeze','Fresh','/assets/products/sea-breeze.jpg'],
+      'Baby Powder':['fresh','Baby Powder','Calm','/assets/products/baby-powder.jpg'],
       'Cinnamon':['woody','Cinnamon','Cozy','/assets/products/CINNAMON.png']
     };
     const priceList = {
@@ -191,12 +191,12 @@ function init() {
   const imageByName = {
     'Vanilla':'/assets/products/VANILLA.png',
     'Coffee':'/assets/products/COFFEE.png',
-    'Lavender':'/assets/products/LAVENDER.png',
+    'Lavender':'/assets/products/lavender.jpg',
     'Strawberry':'/assets/products/STRAWBERRY.png',
-    'Warm Cotton':'/assets/products/WARMCOTTON.png',
-    'Pomegranate':'/assets/products/POMEGRANATE.png',
-    'Sea Breeze':'/assets/products/SEABREEZ.png',
-    'Baby Powder':'/assets/products/BABYPOWDER.png',
+    'Warm Cotton':'/assets/products/warm-cotton.jpg',
+    'Pomegranate':'/assets/products/pomegranate.jpg',
+    'Sea Breeze':'/assets/products/sea-breeze.jpg',
+    'Baby Powder':'/assets/products/baby-powder.jpg',
     'Cinnamon':'/assets/products/CINNAMON.png'
   };
   const officialPrices = {
