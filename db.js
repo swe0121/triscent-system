@@ -160,15 +160,15 @@ function init() {
   if (productCount === 0) {
     const catId = Object.fromEntries(db.prepare('SELECT id,slug FROM categories').all().map(x=>[x.slug,x.id]));
     const scentInfo = {
-      'Vanilla':['sweet','Vanilla','Cozy','/assets/products/default.svg'],
-      'Coffee':['sweet','Coffee','Energy','/assets/products/default.svg'],
+      'Vanilla':['sweet','Vanilla','Cozy','/assets/products/vanilla.jpg'],
+      'Coffee':['sweet','Coffee','Energy','/assets/products/coffee.jpg'],
       'Lavender':['floral','Lavender','Relax','/assets/products/lavender.jpg'],
-      'Strawberry':['fruity','Strawberry','Romantic','/assets/products/default.svg'],
+      'Strawberry':['fruity','Strawberry','Romantic','/assets/products/strawberry.jpg'],
       'Warm Cotton':['fresh','Warm Cotton','Fresh','/assets/products/warm-cotton.jpg'],
       'Pomegranate':['fruity','Pomegranate','Energy','/assets/products/pomegranate.jpg'],
       'Sea Breeze':['fresh','Sea Breeze','Fresh','/assets/products/sea-breeze.jpg'],
       'Baby Powder':['fresh','Baby Powder','Calm','/assets/products/baby-powder.jpg'],
-      'Cinnamon':['woody','Cinnamon','Cozy','/assets/products/default.svg']
+      'Cinnamon':['woody','Cinnamon','Cozy','/assets/products/cinnamon.jpg']
     };
     const priceList = {
       '100ML': {'Vanilla':230,'Coffee':230,'Lavender':240,'Strawberry':240,'Warm Cotton':260,'Pomegranate':250,'Sea Breeze':250,'Baby Powder':240,'Cinnamon':240},
@@ -189,11 +189,15 @@ function init() {
 
   // Sync real Triscent image paths and official prices into existing databases.
   const imageByName = {
+    'Vanilla':'/assets/products/vanilla.jpg',
+    'Coffee':'/assets/products/coffee.jpg',
     'Lavender':'/assets/products/lavender.jpg',
+    'Strawberry':'/assets/products/strawberry.jpg',
     'Warm Cotton':'/assets/products/warm-cotton.jpg',
     'Pomegranate':'/assets/products/pomegranate.jpg',
     'Sea Breeze':'/assets/products/sea-breeze.jpg',
-    'Baby Powder':'/assets/products/baby-powder.jpg'
+    'Baby Powder':'/assets/products/baby-powder.jpg',
+    'Cinnamon':'/assets/products/cinnamon.jpg'
   };
   const officialPrices = {
     '100ML': {'Vanilla':230,'Coffee':230,'Lavender':240,'Strawberry':240,'Warm Cotton':260,'Pomegranate':250,'Sea Breeze':250,'Baby Powder':240,'Cinnamon':240},

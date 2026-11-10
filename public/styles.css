@@ -519,3 +519,15 @@ input,select,textarea{font-size:13px!important;color:#201918!important}
   .choice-buttons,.payment-buttons,.order-extra,.meaning-grid,.photo-placeholders{grid-template-columns:1fr}
   .site-footer{padding-top:24px!important;padding-bottom:24px!important}
 }
+
+
+/* IMAGE SLOT UPDATE V14
+   Real files can be uploaded later using the fixed filenames. */
+.photo-placeholders img{
+  width:100%;
+  min-height:180px;
+  aspect-ratio:4/3;
+  object-fit:cover;
+  border:1px dashed var(--line-dark);
+  background:var(--cream-2);
+}
