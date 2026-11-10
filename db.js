@@ -71,6 +71,7 @@ function init() {
       customization TEXT DEFAULT 'Not Customize',
       remarks TEXT DEFAULT '',
       payment_method TEXT DEFAULT '',
+      fulfillment_method TEXT NOT NULL DEFAULT 'Pickup',
       created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY(user_id) REFERENCES users(id)
@@ -135,6 +136,7 @@ function init() {
   if (!orderCols.includes('customization')) db.exec("ALTER TABLE orders ADD COLUMN customization TEXT DEFAULT 'Not Customize'");
   if (!orderCols.includes('remarks')) db.exec("ALTER TABLE orders ADD COLUMN remarks TEXT DEFAULT ''");
   if (!orderCols.includes('payment_method')) db.exec("ALTER TABLE orders ADD COLUMN payment_method TEXT DEFAULT ''");
+  if (!orderCols.includes('fulfillment_method')) db.exec("ALTER TABLE orders ADD COLUMN fulfillment_method TEXT NOT NULL DEFAULT 'Pickup'");
 
   const count = db.prepare('SELECT COUNT(*) AS c FROM categories').get().c;
   if (count === 0) {
