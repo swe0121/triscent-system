@@ -63,7 +63,7 @@ function homePage(s){
     ['Herbal','herbal','/assets/products/lavender.jpg']
   ];
   return `<section class="hero">
-    <div class="hero-copy"><span class="eyebrow">Handcrafted Scented Candles</span><h1>Scents That Make Moments Brighter</h1><p>Browse scented candles for everyday use, gifts, and special occasions. TriScents also accepts custom souvenir orders for weddings and other events.</p><div class="hero-actions"><a class="btn light" href="/shop">Shop Now</a><a class="btn" href="/scent-finder">Find Your Scent</a><a class="btn" href="#souvenirs">Souvenir Orders</a></div></div>
+    <div class="hero-copy"><h1>Welcome to TriScents!</h1><p class="hero-handcrafted">All our candles are handcrafted just for you.</p><span class="hero-short-tagline">Scents for Brighter Moments</span><div class="hero-actions"><a class="btn light" href="/shop">Shop Now</a><a class="btn" href="/scent-finder">Find Your Scent</a><a class="btn" href="#souvenirs">Souvenir Orders</a></div></div>
     <div class="hero-art"><img src="/assets/MAINPAGE_Background.png" onerror="this.onerror=null;this.src='/assets/hero.svg'" alt="TriScents scented candle"></div>
   </section>
   <section class="benefits"><a class="benefit-card" href="/quality-scents"><strong>Quality Scents</strong><span>See the scent families and what they are best suited for</span></a><a class="benefit-card" href="/handcrafted"><strong>Handcrafted</strong><span>See how TriScents candles are prepared</span></a><a class="benefit-card" href="/gift-ready"><strong>Gift Ready</strong><span>See packaging options for gifts and souvenirs</span></a></section>

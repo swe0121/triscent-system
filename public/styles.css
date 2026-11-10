@@ -531,3 +531,166 @@ input,select,textarea{font-size:13px!important;color:#201918!important}
   border:1px dashed var(--line-dark);
   background:var(--cream-2);
 }
+
+
+/* =========================================================
+   BRIGHT TRISCENTS BRAND REFRESH V15
+   Based on the owner's burgundy / pink logo and latest notes.
+   Customer-facing colors only; management behavior is unchanged.
+   ========================================================= */
+.store-body{
+  background:#fff4ef!important;
+  color:#3e171a!important;
+}
+.store-body .site-header{
+  background:#9d2032!important;
+  border-bottom:1px solid #c95067!important;
+  box-shadow:0 2px 10px rgba(112,14,31,.12);
+}
+.store-body .site-brand,
+.store-body .site-nav a,
+.store-body .header-link,
+.store-body .header-button{
+  color:#fff8f5!important;
+}
+.brand-logo{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  object-fit:cover;
+  flex:0 0 auto;
+  box-shadow:0 0 0 2px #fff8f5;
+}
+.store-body .wordmark-name{
+  color:#fff8f5!important;
+  font-size:23px;
+}
+.store-body .cart-pill{
+  border-color:rgba(255,248,245,.72)!important;
+  background:rgba(255,255,255,.08);
+}
+.store-body .cart-pill b{
+  background:#f38da5!important;
+  color:#6b0714!important;
+}
+.store-body .hero{
+  background:linear-gradient(135deg,#c43f57 0%,#de7185 100%)!important;
+  border-color:#9d2032!important;
+}
+.store-body .hero-copy,
+.store-body .hero-copy h1,
+.store-body .hero-copy p{
+  color:#fffaf8!important;
+}
+.store-body .hero h1{
+  font-size:58px!important;
+  line-height:1!important;
+  margin:0 0 14px!important;
+  max-width:570px!important;
+}
+.hero-handcrafted{
+  font-size:19px!important;
+  line-height:1.5!important;
+  font-weight:600!important;
+  max-width:500px!important;
+}
+.hero-short-tagline{
+  display:inline-block;
+  margin-top:13px;
+  color:#ffe0e7;
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:22px;
+  font-style:italic;
+  font-weight:700;
+}
+.store-body .hero:before{
+  background:#f3a0b1!important;
+  color:#6e0d1c!important;
+}
+.store-body .hero-art{
+  background:#f6c9ce!important;
+  border-left-color:#9d2032!important;
+}
+.store-body .hero .btn.light{
+  background:#fff8f5!important;
+  color:#8c1728!important;
+  border-color:#fff8f5!important;
+}
+.store-body .hero .btn:not(.light){
+  color:#fff!important;
+  border-color:#fff!important;
+  background:rgba(125,12,31,.18)!important;
+}
+.store-body .hero .btn:hover{
+  background:#7e1424!important;
+  color:#fff!important;
+}
+.store-body .benefits{
+  background:#fffaf7!important;
+  border-color:#c85b69!important;
+}
+.store-body .benefit-card{
+  border-right-color:#efd0d2!important;
+}
+.store-body .benefit-card:hover{
+  background:#fde4e6!important;
+}
+.store-body .souvenir-section{
+  background:#f9d9d7!important;
+  border-color:#c85b69!important;
+}
+.store-body .souvenir-section h2,
+.store-body .souvenir-section p{
+  color:#541d22!important;
+}
+.store-body .btn.primary{
+  background:#a7283b!important;
+  border-color:#a7283b!important;
+  color:#fff!important;
+}
+.store-body .btn.primary:hover{
+  background:#c3485d!important;
+  border-color:#c3485d!important;
+}
+.store-body .finder{
+  background:#f0aaa8!important;
+  border-color:#c85b69!important;
+}
+.store-body .filter-link:hover,
+.store-body .filter-link.active{
+  background:#f2a6b4!important;
+  border-color:#b94558!important;
+  color:#5f111d!important;
+}
+.store-body .home-banner{
+  background:#b52d41!important;
+  border-color:#b52d41!important;
+}
+.store-body .home-banner-copy p{
+  color:#ffe7e9!important;
+}
+.store-body .home-banner-copy .eyebrow{
+  color:#ffd0da!important;
+}
+.store-body .site-footer{
+  background:#981f31!important;
+  color:#fff8f5!important;
+  border-top:6px solid #ef8da2!important;
+}
+.store-body .site-footer p,
+.store-body .site-footer a,
+.store-body .footer-socials span{
+  color:#ffe8ea!important;
+}
+.store-body .site-footer strong{
+  color:#ffc0cf!important;
+}
+.store-body .price-table th{
+  background:#a5283a!important;
+}
+@media(max-width:650px){
+  .store-body .hero h1{font-size:42px!important}
+  .hero-handcrafted{font-size:17px!important}
+  .hero-short-tagline{font-size:19px}
+  .brand-logo{width:36px;height:36px}
+}
