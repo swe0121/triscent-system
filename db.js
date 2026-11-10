@@ -68,6 +68,9 @@ function init() {
       duplicate_flag INTEGER NOT NULL DEFAULT 0,
       restocked INTEGER NOT NULL DEFAULT 0,
       notes TEXT DEFAULT '',
+      customization TEXT DEFAULT 'Not Customize',
+      remarks TEXT DEFAULT '',
+      payment_method TEXT DEFAULT '',
       created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY(user_id) REFERENCES users(id)
@@ -127,6 +130,11 @@ function init() {
       FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE SET NULL
     );
   `);
+
+  const orderCols = db.prepare("PRAGMA table_info(orders)").all().map(x=>x.name);
+  if (!orderCols.includes('customization')) db.exec("ALTER TABLE orders ADD COLUMN customization TEXT DEFAULT 'Not Customize'");
+  if (!orderCols.includes('remarks')) db.exec("ALTER TABLE orders ADD COLUMN remarks TEXT DEFAULT ''");
+  if (!orderCols.includes('payment_method')) db.exec("ALTER TABLE orders ADD COLUMN payment_method TEXT DEFAULT ''");
 
   const count = db.prepare('SELECT COUNT(*) AS c FROM categories').get().c;
   if (count === 0) {

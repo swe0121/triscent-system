@@ -2,7 +2,7 @@ const money = n => `₱${Number(n).toLocaleString('en-PH',{minimumFractionDigits
 const esc = v => String(v ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 
 function logo() {
-  return `<span class="wordmark"><span class="wordmark-ts">TS</span><span class="wordmark-name">Triscent</span></span>`;
+  return `<span class="wordmark"><span class="wordmark-ts">TS</span><span class="wordmark-name">TriScents</span></span>`;
 }
 
 function customerHeader(user, cartCount, csrf) {
@@ -17,6 +17,9 @@ function customerHeader(user, cartCount, csrf) {
       <a href="/shop">Shop</a>
       <a href="/scent-finder">Scent Finder</a>
       <a href="/price-list">Price List</a>
+      <a href="/shop-rules">Shop Rules</a>
+      <a href="/faq">FAQ</a>
+      <a href="/how-to-order">How to Order</a>
       <a href="/about">About</a>
     </nav>
     <div class="header-actions">
@@ -40,31 +43,31 @@ function managementShell(user, csrf, body) {
   return `<div class="admin-layout management-shell">
     <aside class="admin-sidebar">
       <a class="admin-brand" href="/management/dashboard">${logo()}</a>
-      <div class="admin-user"><strong>${esc(user?.name || 'Triscent')}</strong><span>Owner / Staff</span></div>
+      <div class="admin-user"><strong>${esc(user?.name || 'TriScents')}</strong><span>Owner / Staff</span></div>
       <nav class="admin-nav">${nav.map(([label,href])=>`<a href="${href}">${label}</a>`).join('')}</nav>
       <div class="admin-sidebar-bottom">
         <form method="post" action="/logout"><input type="hidden" name="csrf" value="${csrf}"><button>Sign out</button></form>
       </div>
     </aside>
     <div class="admin-workspace">
-      <header class="admin-topbar"><div><span>Triscent Management Portal</span></div><div>${esc(user?.name || '')}</div></header>
+      <header class="admin-topbar"><div><span>TriScents Management Portal</span></div><div>${esc(user?.name || '')}</div></header>
       ${body}
     </div>
   </div>`;
 }
 
 function portalLoginLayout({portal='management', body='', flash=''}) {
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Owner / Staff Sign In | Triscent</title><meta name="description" content="Triscent management sign in"><link rel="stylesheet" href="/styles.css?v=12"></head><body class="store-body">
-    <main class="auth-page"><div class="auth-card"><span class="eyebrow">OWNER / STAFF PORTAL</span><h1>Sign In</h1><p>Use your assigned Triscent owner or staff account. Both account types use the same management portal.</p>${flash?`<div class="flash portal-inline-flash">${esc(flash)}</div>`:''}${body}</div></main>
-    <script src="/app.js?v=12"></script>
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Owner / Staff Sign In | TriScents</title><meta name="description" content="TriScents management sign in"><link rel="stylesheet" href="/styles.css?v=13"></head><body class="store-body">
+    <main class="auth-page"><div class="auth-card"><span class="eyebrow">OWNER / STAFF PORTAL</span><h1>Sign In</h1><p>Use your assigned TriScents owner or staff account. Both account types use the same management portal.</p>${flash?`<div class="flash portal-inline-flash">${esc(flash)}</div>`:''}${body}</div></main>
+    <script src="/app.js?v=13"></script>
   </body></html>`;
 }
 
-function layout({title='Triscent', body='', user=null, cartCount=0, csrf='', admin=false, flash=''}) {
+function layout({title='TriScents', body='', user=null, cartCount=0, csrf='', admin=false, flash=''}) {
   const content = admin
     ? managementShell(user, csrf, `${flash?`<div class="admin-flash">${esc(flash)}</div>`:''}${body}`)
-    : `${customerHeader(user, cartCount, csrf)}${flash?`<div class="flash">${esc(flash)}</div>`:''}<main>${body}</main><footer class="site-footer"><div>${logo()}<p>Scented candles for everyday spaces and gift giving.</p></div><div><strong>Shop</strong><a href="/shop">All products</a><a href="/scent-finder">Scent Finder</a><a href="/price-list">Price List</a></div><div><strong>Account</strong><a href="/customer/login">Customer sign in</a><a href="/account">My orders</a><a href="/management/login">Owner / Staff sign in</a></div><div><strong>Triscent</strong><a href="/about">About</a></div></footer>`;
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)} | Triscent</title><meta name="description" content="Triscent scented candle ordering system"><link rel="stylesheet" href="/styles.css?v=12"></head><body class="${admin?'admin-body':'store-body'}">${content}<script src="/app.js?v=12"></script></body></html>`;
+    : `${customerHeader(user, cartCount, csrf)}${flash?`<div class="flash">${esc(flash)}</div>`:''}<main>${body}</main><footer class="site-footer"><div>${logo()}<p>Scented candles for everyday spaces, gifts, souvenirs, and special events.</p><div class="footer-socials"><span>Instagram</span><span>TikTok</span><span>Facebook</span><span>Location</span></div></div><div><strong>Shop</strong><a href="/shop">All products</a><a href="/scent-finder">Scent Finder</a><a href="/price-list">Price List</a></div><div><strong>Help</strong><a href="/how-to-order">How to Order</a><a href="/shop-rules">Shop Rules</a><a href="/faq">FAQ</a></div><div><strong>TriScents</strong><a href="/about">About</a></div></footer>`;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)} | TriScents</title><meta name="description" content="TriScents scented candle ordering system"><link rel="stylesheet" href="/styles.css?v=13"></head><body class="${admin?'admin-body':'store-body'}">${content}<script src="/app.js?v=13"></script></body></html>`;
 }
 
 function productCard(p, csrf='', user=null) {

@@ -466,3 +466,56 @@ input,select,textarea{font-size:13px!important;color:#201918!important}
 .offer-grid article{background:#fff;border:1px solid var(--line);padding:18px;display:flex;justify-content:space-between;gap:15px}
 .offer-grid strong{color:#211816}.offer-grid span{color:#64171a;font-weight:800}
 @media(max-width:680px){.offer-grid{grid-template-columns:1fr}}
+
+
+/* =========================================================
+   OWNER FEEDBACK UPDATE V13
+   ========================================================= */
+.hero:before{content:"TRISCENTS · CUSTOM SOUVENIRS · SCENTED CANDLES · EVENT ORDERS · "!important}
+.hero-art:after{content:none!important;display:none!important}
+.benefits{grid-template-columns:repeat(3,1fr)!important}
+.benefit-card{padding:20px 18px;text-align:center;border-right:1px solid var(--line);transition:.16s ease}
+.benefit-card:last-child{border-right:0}
+.benefit-card:hover{background:var(--cream-2)}
+.souvenir-section{max-width:1180px;margin:28px auto 0;padding:28px 30px;display:flex;align-items:center;justify-content:space-between;gap:28px;background:#dcc9aa;border:1px solid var(--espresso)}
+.souvenir-section h2{font-family:Georgia,'Times New Roman',serif;font-size:34px;margin:5px 0 8px}
+.souvenir-section p{max-width:760px;line-height:1.6;margin:0;color:#59483f}
+.choice-field{border:1px solid var(--line-dark);padding:12px;margin:0}
+.choice-field legend{padding:0 6px;font-size:11px;font-weight:800}
+.choice-buttons{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.payment-buttons{grid-template-columns:repeat(3,1fr)}
+.choice-buttons label{display:block}
+.choice-buttons input{position:absolute;opacity:0;pointer-events:none}
+.choice-buttons span{display:flex;align-items:center;justify-content:center;min-height:42px;border:1px solid var(--line-dark);background:var(--paper);font-weight:700;font-size:12px}
+.choice-buttons input:checked+span{background:var(--espresso);color:var(--paper);border-color:var(--espresso)}
+.order-extra{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:16px}
+.order-extra>div{border:1px solid var(--line);padding:11px;display:grid;gap:4px}
+.order-extra small{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.info-list,.how-steps,.faq-list{display:grid;gap:12px;margin-top:22px}
+.info-list>div,.how-steps>div,.faq-list details,.meaning-grid article{border:1px solid var(--line);padding:16px;background:var(--paper-warm)}
+.info-list p,.how-steps p,.faq-list p,.meaning-grid p{margin:6px 0 0}
+.faq-list summary{font-weight:800;cursor:pointer}
+.how-steps>div{display:grid;grid-template-columns:38px 1fr;gap:12px;align-items:start}
+.how-steps b{width:34px;height:34px;display:grid;place-items:center;background:var(--espresso);color:var(--paper);border-radius:50%}
+.meaning-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:22px}
+.meaning-grid h2{font-size:24px;margin:0}
+.meaning-grid small{display:block;margin-top:10px;color:var(--muted);line-height:1.5}
+.photo-placeholders{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}
+.photo-placeholders>div{min-height:180px;display:grid;place-items:center;border:1px dashed var(--line-dark);background:var(--cream-2);color:var(--muted);font-size:12px}
+.footer-socials{display:flex;gap:12px;flex-wrap:wrap;margin-top:2px}
+.footer-socials span{font-size:10px;color:#e7d6c7}
+.admin-order-notes{padding:10px 0}
+.admin-order-notes p{margin:6px 0}
+.site-footer{padding-top:28px!important;padding-bottom:28px!important}
+.site-nav{gap:13px}
+.site-nav a{font-size:10px}
+@media(max-width:900px){
+  .souvenir-section{margin-left:11px;margin-right:11px;align-items:flex-start;flex-direction:column}
+  .benefits{grid-template-columns:repeat(3,1fr)!important}
+}
+@media(max-width:650px){
+  .benefits{grid-template-columns:1fr!important}
+  .benefit-card{border-right:0;border-bottom:1px solid var(--line)}
+  .choice-buttons,.payment-buttons,.order-extra,.meaning-grid,.photo-placeholders{grid-template-columns:1fr}
+  .site-footer{padding-top:24px!important;padding-bottom:24px!important}
+}
