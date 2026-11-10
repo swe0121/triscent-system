@@ -162,7 +162,7 @@ function init() {
     const scentInfo = {
       'Vanilla':['sweet','Vanilla','Cozy','/assets/products/VANILLA.png'],
       'Coffee':['sweet','Coffee','Energy','/assets/products/COFFEE.png'],
-      'Lavender':['floral','Lavender','Relax','/assets/products/lavender.jpg'],
+      'Lavender':['floral','Lavender','Relax','/assets/products/LAVENDER.png'],
       'Strawberry':['fruity','Strawberry','Romantic','/assets/products/STRAWBERRY.png'],
       'Warm Cotton':['fresh','Warm Cotton','Fresh','/assets/products/warm-cotton.jpg'],
       'Pomegranate':['fruity','Pomegranate','Energy','/assets/products/pomegranate.jpg'],
@@ -191,7 +191,7 @@ function init() {
   const imageByName = {
     'Vanilla':'/assets/products/VANILLA.png',
     'Coffee':'/assets/products/COFFEE.png',
-    'Lavender':'/assets/products/lavender.jpg',
+    'Lavender':'/assets/products/LAVENDER.png',
     'Strawberry':'/assets/products/STRAWBERRY.png',
     'Warm Cotton':'/assets/products/warm-cotton.jpg',
     'Pomegranate':'/assets/products/pomegranate.jpg',

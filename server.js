@@ -55,12 +55,12 @@ function restoreOrderStock(orderId){const o=db.prepare('SELECT restocked FROM or
 function homePage(s){
   const featured=db.prepare('SELECT p.*,c.name category_name FROM products p JOIN categories c ON c.id=p.category_id WHERE p.active=1 ORDER BY p.id LIMIT 6').all();
   const scentCards=[
-    ['Floral','floral','/assets/products/lavender.jpg'],
+    ['Floral','floral','/assets/products/LAVENDER.png'],
     ['Fruity','fruity','/assets/products/pomegranate.jpg'],
     ['Woody','woody','/assets/products/default.svg'],
     ['Fresh','fresh','/assets/products/sea-breeze.jpg'],
     ['Sweet','sweet','/assets/products/default.svg'],
-    ['Herbal','herbal','/assets/products/lavender.jpg']
+    ['Herbal','herbal','/assets/products/LAVENDER.png']
   ];
   return `<section class="hero">
     <div class="hero-copy"><h1>Welcome to TriScents!</h1><p class="hero-handcrafted">All our candles are handcrafted just for you.</p><span class="hero-short-tagline">Scents for Brighter Moments</span><div class="hero-actions"><a class="btn light" href="/shop">Shop Now</a><a class="btn" href="/scent-finder">Find Your Scent</a><a class="btn" href="#souvenirs">Souvenir Orders</a></div></div>
