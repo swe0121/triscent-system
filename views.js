@@ -2,7 +2,7 @@ const money = n => `₱${Number(n).toLocaleString('en-PH',{minimumFractionDigits
 const esc = v => String(v ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 
 function logo() {
-  return `<span class="wordmark"><img class="brand-logo logo-placeholder" src="/assets/TRISCENTS_LOGO.png" alt="TriScents logo" onerror="this.style.display=\'none\'"><span class="wordmark-name">TriScents</span></span>`;
+  return `<span class="wordmark"><img class="brand-logo logo-placeholder" src="/assets/TRISCENTS_LOGO.jpg" alt="TriScents logo" onerror="this.style.display=\'none\'"><span class="wordmark-name">TriScents</span></span>`;
 }
 
 function customerHeader(user, cartCount, csrf) {
