@@ -694,3 +694,140 @@ input,select,textarea{font-size:13px!important;color:#201918!important}
   .hero-short-tagline{font-size:19px}
   .brand-logo{width:36px;height:36px}
 }
+
+
+/* =========================================================
+   BURGUNDY EARTH TONE CORRECTION V16
+   Keep the earlier warm/earth-tone look, only slightly brighter.
+   The logo file is only a placeholder path until the real file is uploaded.
+   ========================================================= */
+.store-body{
+  background:#f3e6d7!important;
+  color:#2f1d18!important;
+}
+.store-body .site-header{
+  background:#7b1b20!important;
+  border-bottom:1px solid #9b3a35!important;
+  box-shadow:0 2px 9px rgba(73,24,20,.13)!important;
+}
+.store-body .site-brand,
+.store-body .site-nav a,
+.store-body .header-link,
+.store-body .header-button{
+  color:#fff5eb!important;
+}
+.store-body .wordmark-name{
+  color:#fff5eb!important;
+}
+.brand-logo{
+  width:40px!important;
+  height:40px!important;
+  border-radius:50%!important;
+  object-fit:cover!important;
+  box-shadow:0 0 0 1px #f4e6d7!important;
+}
+.store-body .cart-pill{
+  border-color:rgba(255,245,235,.6)!important;
+  background:rgba(255,255,255,.05)!important;
+}
+.store-body .cart-pill b{
+  background:#c87559!important;
+  color:#fff7ef!important;
+}
+.store-body .hero{
+  background:linear-gradient(135deg,#9a3b32 0%,#b85f47 100%)!important;
+  border-color:#6f241e!important;
+}
+.store-body .hero-copy,
+.store-body .hero-copy h1,
+.store-body .hero-copy p{
+  color:#fff8ee!important;
+}
+.hero-short-tagline{
+  color:#f4d8c3!important;
+}
+.store-body .hero:before{
+  background:#c97959!important;
+  color:#4b211b!important;
+}
+.store-body .hero-art{
+  background:#d99a7a!important;
+  border-left-color:#6f241e!important;
+}
+.store-body .hero .btn.light{
+  background:#fff4e8!important;
+  color:#6f201d!important;
+  border-color:#fff4e8!important;
+}
+.store-body .hero .btn:not(.light){
+  color:#fff8ee!important;
+  border-color:#f7dfcf!important;
+  background:rgba(85,27,22,.12)!important;
+}
+.store-body .hero .btn:hover{
+  background:#6f201d!important;
+  border-color:#6f201d!important;
+}
+.store-body .benefits{
+  background:#fff9f1!important;
+  border-color:#8f4035!important;
+}
+.store-body .benefit-card{
+  border-right-color:#d9b6a1!important;
+}
+.store-body .benefit-card:hover{
+  background:#f3dfcf!important;
+}
+.store-body .souvenir-section{
+  background:#ead3c0!important;
+  border-color:#8f4035!important;
+}
+.store-body .souvenir-section h2,
+.store-body .souvenir-section p{
+  color:#48251e!important;
+}
+.store-body .btn.primary{
+  background:#7b1b20!important;
+  border-color:#7b1b20!important;
+  color:#fff8ee!important;
+}
+.store-body .btn.primary:hover{
+  background:#99372f!important;
+  border-color:#99372f!important;
+}
+.store-body .finder{
+  background:#d68a68!important;
+  border-color:#8f4035!important;
+}
+.store-body .filter-link:hover,
+.store-body .filter-link.active{
+  background:#d89a78!important;
+  border-color:#8f4035!important;
+  color:#3d201a!important;
+}
+.store-body .home-banner{
+  background:#773026!important;
+  border-color:#773026!important;
+}
+.store-body .home-banner-copy p{
+  color:#f2ddd0!important;
+}
+.store-body .home-banner-copy .eyebrow{
+  color:#e5b79c!important;
+}
+.store-body .site-footer{
+  background:#70201f!important;
+  color:#fff5eb!important;
+  border-top:6px solid #b8664c!important;
+}
+.store-body .site-footer p,
+.store-body .site-footer a,
+.store-body .footer-socials span{
+  color:#ead9cc!important;
+}
+.store-body .site-footer strong{
+  color:#dca486!important;
+}
+.store-body .price-table th{
+  background:#7b1b20!important;
+}
